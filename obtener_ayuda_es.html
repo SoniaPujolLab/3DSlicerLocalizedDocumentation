@@ -18,6 +18,10 @@
   h1 { border-bottom: 3px solid #2e6da4; padding-bottom: .3rem; }
   h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .2rem; margin-top: 2rem; }
   a { color: #2e6da4; }
+  table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+  th, td { border: 1px solid #d0d7de; padding: .4rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #f0f4f8; }
+  tr:nth-child(even) { background: #f9fafb; }
   img { max-width: 100%; }
   pre { background: #f6f8fa; padding: .8rem 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; }
   code { background: #f0f4f8; padding: .1rem .3rem; border-radius: 4px; font-size: .9em; }
@@ -29,7 +33,7 @@
 <h1 class="title">Obtener ayuda — 3D Slicer</h1>
 </header>
 <h1 id="obtener-ayuda">Obtener ayuda</h1>
-<p><a href="https://slicer.readthedocs.io/en/latest/user_guide/about.html#contact-us">Comuníquese con la comunidad de Slicer o con los socios comerciales</a> si tiene alguna pregunta, informe de errores o solicitud de mejora, siguiendo las pautas que se describen a continuación.</p>
+<p><a href="acerca_de_3d_slicer_es.html#contáctenos">Comuníquese con la comunidad de Slicer o con los socios comerciales</a> si tiene alguna pregunta, informe de errores o solicitud de mejora, siguiendo las pautas que se describen a continuación.</p>
 <h2 id="necesito-ayuda-para-usar-slicer">Necesito ayuda para usar Slicer</h2>
 <ul>
 <li><p>Puede comenzar escribiendo su pregunta en la búsqueda web de Google. Es muy probable que su pregunta ya se haya formulado y respondido antes, ya que todas las preguntas que se han hecho sobre Slicer están disponibles públicamente e indexadas por Google. Las fuentes de información más actualizadas son el <a href="https://discourse.slicer.org">foro de Slicer</a> y la <a href="https://slicer.readthedocs.io/">documentación de Slicer en Read the Docs</a>. Google puede encontrar discusiones más antiguas en las antiguas listas de correo y páginas wiki de Slicer, que pueden o no ser exactamente precisas para la versión actual de Slicer, pero que aún pueden ofrecer pistas útiles.</p></li>
@@ -58,7 +62,7 @@
 <h2 id="solución-de-problemas">Solución de problemas</h2>
 <h3 id="la-aplicación-slicer-no-se-inicia">La aplicación Slicer no se inicia</h3>
 <ul>
-<li><p>Es posible que la CPU o las capacidades gráficas de su computadora no cumplan con los <a href="https://slicer.readthedocs.io/en/latest/user_guide/getting_started.html#system-requirements">requisitos mínimos del sistema</a>.</p>
+<li><p>Es posible que la CPU o las capacidades gráficas de su computadora no cumplan con los <a href="primeros_pasos_es.html#requisitos-del-sistema">requisitos mínimos del sistema</a>.</p>
 <ul>
 <li><p>Actualizar el controlador de su tarjeta gráfica puede solucionar algunos problemas, pero si eso no ayuda y tiene una computadora antigua, es posible que deba actualizar a una computadora de fabricación más reciente o cambiar a un renderizador por software. Un renderizador por software es particularmente útil para ejecutar Slicer en una máquina sin pantalla (headless), como una máquina virtual en un proveedor de computación en la nube con una CPU potente pero sin GPU, usando el Protocolo de Escritorio Remoto (RDP).</p>
 <pre><code>    Nota
