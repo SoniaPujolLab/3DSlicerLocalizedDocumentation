@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Interfaz de usuario — 3D Slicer</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <style>body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #222; max-width: 900px; margin: 0 auto; padding: 2rem; }
+  h1, h2, h3, h4 { color: #14315a; line-height: 1.25; }
+  h1 { border-bottom: 3px solid #2e6da4; padding-bottom: .3rem; }
+  h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .2rem; margin-top: 2rem; }
+  a { color: #2e6da4; }
+  table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+  th, td { border: 1px solid #d0d7de; padding: .4rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #f0f4f8; }
+  tr:nth-child(even) { background: #f9fafb; }
+  img { max-width: 100%; }
+  pre { background: #f6f8fa; padding: .8rem 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; }
+  code { background: #f0f4f8; padding: .1rem .3rem; border-radius: 4px; font-size: .9em; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 4px solid #2e6da4; margin-left: 0; padding-left: 1rem; color: #555; }</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Interfaz de usuario — 3D Slicer</h1>
+</header>
+<h1 id="interfaz-de-usuario">Interfaz de usuario</h1>
+<h2 id="descripción-general-de-la-aplicación">Descripción general de la aplicación</h2>
+<p>Slicer almacena todos los datos cargados en un repositorio de datos, llamado la “escena” (o escena de Slicer o escena MRML). Cada conjunto de datos, como un volumen de imagen, un modelo de superficie o un conjunto de puntos, se representa en la escena como un “nodo”.</p>
+<p>Slicer ofrece una gran cantidad de “módulos”, cada uno de los cuales implementa un conjunto específico de funciones para crear o manipular datos en la escena. Por lo general, los módulos no interactúan entre sí directamente: todos operan sobre los nodos de datos de la escena. El paquete de Slicer contiene más de 100 módulos integrados, y pueden instalarse módulos adicionales usando el Administrador de extensiones.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/user_interface_main_window_rev02.png" /></p>
+<h3 id="panel-del-módulo">Panel del módulo</h3>
+<p>Este panel (ubicado de forma predeterminada en el lado izquierdo de la ventana principal de la aplicación) muestra todas las opciones y funciones que el módulo actual ofrece al usuario. El módulo actual puede seleccionarse usando la barra de herramientas de <strong>Selección de módulo</strong>.</p>
+<h4 id="sonda-de-datos-data-probe">Sonda de datos (Data Probe)</h4>
+<p>La Sonda de datos se encuentra en la parte inferior del panel del módulo. Muestra información sobre el contenido de la vista en la posición del puntero del mouse:</p>
+<ul>
+<li><p>Información de la vista de corte (se muestra cuando el mouse está sobre una vista de corte):</p>
+<ul>
+<li><p>Nombre de la vista de corte: <code>Red</code>, <code>Green</code>, <code>Yellow</code>, etc.</p></li>
+<li><p>Posición anatómica: tres valores de coordenadas, con el prefijo <code>R</code>/<code>L</code> (derecha/izquierda), <code>A</code>/<code>P</code> (anterior/posterior), <code>S</code>/<code>I</code> (superior/inferior). El origen, la posición (0,0,0), fue elegido por el técnico de imagen cuando se creó la imagen. Por ejemplo, <code>(R 17.6, P 35.3, S 12.1)</code> para una imagen clínica significa que la posición actual está a 17.6 mm a la derecha del origen, 35.3 mm hacia posterior y 12.1 mm superior respecto del origen.</p></li>
+<li><p>Orientación de la vista: <code>Axial</code>, <code>Sagittal</code>, <code>Coronal</code> para las orientaciones anatómicas estándar, y <code>Reformat</code> para cualquier otra orientación.</p></li>
+<li><p>Espaciado de cortes: distancia entre los cortes en esta orientación. Para una imagen clínica, <code>Sp: 2.5</code> significa que los cortes están a 2.5 mm de distancia entre sí.</p></li>
+</ul></li>
+<li><p>Información de la capa de volumen: tres líneas, una por cada capa de volumen</p>
+<ul>
+<li><p>Tipo de capa: <code>L</code> (etiqueta), <code>F</code> (primer plano), <code>B</code> (fondo).</p></li>
+<li><p>Nombre del volumen, o <code>None</code> si no hay ningún volumen seleccionado para esa capa.</p></li>
+<li><p>Coordenadas de vóxel (IJK) del volumen.</p></li>
+<li><p>Valor del vóxel. Para los volúmenes de etiquetas, también se muestra el nombre de la etiqueta correspondiente al valor del vóxel.</p></li>
+</ul></li>
+<li><p>Información de segmentación: para cada segmentación visible en esa posición</p>
+<ul>
+<li><p>Tipo de capa: <code>S</code> (segmentación)</p></li>
+<li><p>Nombre de la segmentación.</p></li>
+<li><p>Nombres de los segmentos. Se enumeran varios nombres de segmentos si se muestran varios segmentos en esa posición (los segmentos se superponen).</p></li>
+</ul></li>
+</ul>
+<h3 id="vistas">Vistas</h3>
+<p>Slicer muestra los datos en diversas vistas. El usuario puede elegir entre varios diseños predefinidos, que pueden contener vistas de corte, 3D, de gráfico y de tabla.</p>
+<p>La barra de herramientas de Diseño (Layout) ofrece un menú desplegable de diseños útiles para muchos tipos de estudios. Cuando Slicer se cierra normalmente, el diseño seleccionado se guarda y se restaura la próxima vez que se inicia la aplicación.</p>
+<h3 id="menú-de-la-aplicación">Menú de la aplicación</h3>
+<ul>
+<li><p><strong>File</strong> (Archivo): funciones para cargar una escena previamente guardada o conjuntos de datos individuales de diversos tipos, y para descargar conjuntos de datos de muestra desde internet. Aquí también se ofrece una opción para guardar escenas y datos. <strong>Add Data</strong> (Agregar datos) permite cargar datos desde archivos. Se recomienda el módulo <strong>DICOM</strong> para importar datos de archivos DICOM y cargar los datos DICOM importados. <strong>Save</strong> (Guardar) abre la ventana “Save Data” (Guardar datos), que ofrece una variedad de opciones para guardar todos los datos o los conjuntos de datos seleccionados.</p></li>
+<li><p><strong>Edit</strong> (Editar): contiene una opción para mostrar la Configuración de la aplicación (Application Settings), que permite a los usuarios personalizar la apariencia y el comportamiento de Slicer, como los módulos que se muestran en la barra de herramientas, el tamaño de fuente de la aplicación, la ubicación del directorio temporal y la ubicación de módulos adicionales de Slicer que se incluirán.</p></li>
+<li><p><strong>View</strong> (Ver): funciones para mostrar/ocultar ventanas y widgets adicionales, como el <strong>Administrador de extensiones</strong> para instalar extensiones desde la tienda de aplicaciones de Slicer, el <strong>Registro de errores</strong> (Error Log) para comprobar si la aplicación encontró algún posible error, la <strong>Consola de Python</strong> para obtener una consola de Python con la que interactuar con los datos o módulos cargados, <strong>mostrar/ocultar barras de herramientas</strong> o <strong>cambiar el diseño de la vista</strong>.</p></li>
+<li><p><strong>Help</strong> (Ayuda): contiene enlaces a documentación, guías y sitios de la comunidad. <strong>Report a Bug</strong> (Informar de un error) proporciona instrucciones para informar de errores y un acceso cómodo a los mensajes de registro. También hay enlaces para buscar <strong>Publicaciones de Slicer</strong> (Slicer Publications) y aprender <strong>Cómo citar</strong> (How to Cite) Slicer.</p></li>
+</ul>
+<h3 id="barra-de-herramientas">Barra de herramientas</h3>
+<p>La barra de herramientas proporciona acceso rápido a las funciones de uso frecuente. Los paneles individuales de la barra de herramientas pueden mostrarse/ocultarse usando el menú: sección View / Toolbars.</p>
+<p>La barra de herramientas de <strong>Selección de módulo</strong> se usa para seleccionar el “módulo” actualmente activo. La barra de herramientas ofrece opciones para buscar nombres de módulos (<code>Ctrl</code> + <code>f</code> o haciendo clic en el icono de la lupa) o para seleccionar desde un menú. El <strong>botón desplegable del historial de módulos</strong> muestra la lista de módulos usados recientemente. Los <strong>botones de flecha</strong> pueden usarse para retroceder o volver a un módulo usado anteriormente.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/user_interface_module_toolbar.png" /></p>
+<p>La barra de herramientas de <strong>Módulos favoritos</strong> contiene una lista de los módulos más usados. La lista puede personalizarse usando el menú: Edit / Application settings / Modules / Favorite Modules. Arrastre y suelte módulos desde la lista de Módulos a la lista de Módulos favoritos para agregar un módulo.</p>
+<h3 id="barra-de-estado">Barra de estado</h3>
+<p>Este panel puede mostrar el estado de la aplicación, como la operación actual en curso. Al hacer clic en los pequeños iconos <strong>X</strong> se muestra la ventana del Registro de errores.</p>
+<h2 id="revisar-los-datos-cargados">Revisar los datos cargados</h2>
+<p>Los datos disponibles en Slicer pueden revisarse en el módulo Data, que se encuentra en la barra de herramientas o en la lista de módulos <img src="https://slicer.readthedocs.io/en/latest/_images/SubjectHierarchy.png" />. Puede encontrar más detalles sobre el módulo en la <a href="https://www.slicer.org/wiki/Documentation/Nightly/Modules/Data">wiki de Slicer</a>.</p>
+<p>La pestaña predeterminada Jerarquía de sujetos (Subject hierarchy) del módulo Data puede mostrar los conjuntos de datos en una jerarquía de árbol, organizados como paciente/estudio/serie, como es típico en DICOM, o en cualquier otra estructura de carpetas:</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/data_loading_and_saving_subject_hier.png" /></p>
+<p>La vista de Jerarquía de sujetos contiene numerosas funciones integradas para todos los tipos de datos. Se puede acceder a estas funciones haciendo clic derecho sobre el nodo en el árbol. La lista de acciones difiere según el tipo de dato, por lo que es útil explorar las opciones.</p>
+<p>Los datos de imágenes médicas se presentan en diversas formas y representaciones, lo que puede confundir a quienes recién comienzan en el campo. El siguiente diagrama ofrece una breve descripción de los tipos de datos más típicos que se encuentran al usar Slicer, especialmente en un flujo de trabajo que involucra segmentación.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/data_loading_and_saving_formats.png" /></p>
+<h3 id="seleccionar-los-datos-mostrados">Seleccionar los datos mostrados</h3>
+<p>La pestaña Jerarquía de sujetos del módulo Data muestra todos los conjuntos de datos de la escena. Haga clic en el icono del “ojo” para mostrar u ocultar un elemento en todas las vistas. Arrastre y suelte un elemento en una vista para mostrarlo en esa vista.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/drag_to_view.gif" /></p>
+<p>Se pueden seleccionar varios elementos en el árbol de jerarquía de sujetos usando Ctrl-clic-izquierdo o Shift-clic-izquierdo y arrastrarlos todos a la vez a la vista seleccionada. Si se arrastran dos volúmenes a una vista al mismo tiempo, ambos se mostrarán mezclados entre sí.</p>
+<p>Si una vista se muestra solo en vistas seleccionadas, puede hacer clic derecho sobre el elemento y seleccionar “Show in all views” (Mostrar en todas las vistas) para mostrarlo rápidamente en todas las vistas.</p>
+<p>Si el enlace de vistas está habilitado para una vista de corte, al arrastrar un volumen a cualquiera de las vistas se mostrará el volumen en todas las vistas de ese grupo.</p>
+<p>Las opciones de visualización pueden ajustarse haciendo clic derecho en el icono del ojo en la columna de visualización del árbol. Tenga en cuenta que estas opciones son diferentes de las que se ofrecen al hacer clic derecho en la columna “Node” (Nodo) o “Transform” (Transformación) del árbol.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/getting_started_sh_display_menu.png" /></p>
+<p>Para los volúmenes, las opciones de visualización incluyen:</p>
+<ul>
+<li><p>Restablecer el campo de visión al mostrar (Reset field of view on show): si está habilitado, al mostrar un volumen se ajustan las vistas para mostrar el volumen en el centro, llenando el campo de visión.</p></li>
+<li><p>Restablecer la orientación de la vista al mostrar (Reset view orientation on show): si está habilitado, al mostrar un volumen se alinean las vistas de corte con los ejes del volumen.</p></li>
+</ul>
+<h2 id="interactuar-con-las-vistas">Interactuar con las vistas</h2>
+<h3 id="referencia-cruzada-de-vistas">Referencia cruzada de vistas</h3>
+<p>Mantener presionada la tecla <code>Shift</code> mientras se mueve el mouse en cualquier vista de corte o 3D hará que la mira (Crosshair) se mueva a la posición seleccionada en todas las vistas. De forma predeterminada, cuando la mira se mueve en cualquier vista, todas las vistas de corte se desplazan a la misma posición RAS indicada por el mouse. Esta función es útil durante la inspección.</p>
+<p>Para mostrar/ocultar la posición de la mira, haga clic en el icono de la mira <img src="https://slicer.readthedocs.io/en/latest/_images/SlicesCrosshair.png" />.</p>
+<p>Para personalizar el comportamiento y la apariencia de la mira, haga clic en el botón de “flecha hacia abajo” en el lado derecho del icono de la mira.</p>
+<h3 id="modos-del-mouse">Modos del mouse</h3>
+<p>Slicer tiene varios modos del mouse: <strong>Transform</strong> (Transformar; que permite operaciones interactivas de rotación, traslación y zoom), <strong>Window/Level</strong> (Ventana/Nivel; para ajustar el brillo/contraste de los volúmenes de imagen) y <strong>Place</strong> (Colocar; que permite colocar objetos de forma interactiva en las vistas de corte y 3D).</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/user_interface_mousemode_toolbar.png" /></p>
+<p>Los iconos de la barra de herramientas que cambian entre estos modos del mouse se muestran arriba, de izquierda a derecha, respectivamente. Colocar lista de puntos (Place Point List) es la opción de colocación predeterminada, como se muestra arriba; también hay opciones para colocar otros nodos, como widgets de Regla (Ruler) y de Región de interés (Region of Interest), disponibles en el menú desplegable de Modo de colocación (Place Mode).</p>
+<p>Nota</p>
+<p>El modo Transform es el modo de interacción predeterminado. De forma predeterminada, el modo Place persiste durante una operación de “colocación” después de seleccionar el icono de Modo de colocación, y luego el modo vuelve a Transform. El modo Place puede hacerse persistente (útil para colocar varios puntos de control) marcando la casilla Persistent (Persistente) que se muestra en el extremo derecho de la barra de herramientas de Modo del mouse.</p>
+<h4 id="ajustar-la-ventananivel-de-la-imagen">Ajustar la ventana/nivel de la imagen</h4>
+<p>Las imágenes médicas suelen contener miles de niveles de gris, pero las pantallas de computadora normales solo pueden mostrar 256 niveles de gris, y el ojo humano también tiene limitaciones en cuanto a la diferencia mínima de contraste que puede notar (consulte <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3043920/">Kimpe 2007</a> para información más específica). Por lo tanto, las imágenes médicas se muestran con brillo/contraste ajustable (ventana/nivel).</p>
+<p>De forma predeterminada, 3D Slicer usa la configuración de ventana/nivel especificada en el archivo DICOM. Si no está disponible, la ventana/nivel se ajusta para contener todo el rango de intensidad de la imagen (excepto el 0.1 % superior/inferior, calculado mediante percentiles, para no permitir que una cola muy delgada de la distribución de intensidad reduzca demasiado el contraste de la imagen).</p>
+<p>La ventana/nivel puede ajustarse manualmente en cualquier momento haciendo clic en el botón “Adjust window/level” (Ajustar ventana/nivel) de la barra de herramientas y luego haciendo clic izquierdo y arrastrando en cualquiera de los visores de corte. Se puede calcular la ventana/nivel óptima para un área elegida haciendo clic izquierdo y arrastrando mientras se mantiene presionada la tecla <code>Ctrl</code>.</p>
+<p><a href="https://youtu.be/u1B0F1KcVsk" title="Video de demostración de cómo ajustar la ventana/nivel de la imagen"><img src="https://img.youtube.com/vi/u1B0F1KcVsk/0.jpg" /></a></p>
+<p>Hay opciones adicionales de ventana/nivel, preajustes, histograma de intensidad y ajustes automáticos disponibles en la sección Display (Visualización) del módulo <a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html">Volumes</a>. Los preajustes también están disponibles en el menú contextual de las vistas de corte. Puede restablecer la configuración de ventana/nivel calculada automáticamente usando el menú contextual o usando <code>Ctrl</code> + <code>doble clic izquierdo</code> en la vista de corte.</p>
+<h3 id="vista-3d">Vista 3D</h3>
+<p>Muestra una vista 3D renderizada de la escena junto con referencias visuales para especificar la orientación y la escala.</p>
+<p>Ejes de orientación predeterminados: A = anterior, P = posterior, R = derecha, L = izquierda, S = superior e I = inferior.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/user_interface_3d_view_controls_2025_03_09.png" /></p>
+<p>Controles de la vista 3D: la barra azul que cruza cualquier vista 3D muestra un icono de chincheta a su izquierda. Cuando el mouse pasa sobre este icono, se muestra un panel para configurar la vista 3D. El panel se oculta cuando el mouse se aleja. Para mostrar este panel de forma permanente, simplemente haga clic en el icono de la chincheta.</p>
+<ul>
+<li><p><strong>Centrar la vista 3D</strong> (cuadrado pequeño) centra el corte sobre el contenido actualmente visible de la vista 3D y todos los volúmenes cargados (incluso los volúmenes que no son visibles). El campo de visión (factor de zoom) no se ajusta, por lo que puede ser necesario acercar/alejar para ver todos los objetos. Para restablecer el centro y el campo de visión al mismo tiempo, haga clic en la vista 3D y presione la tecla <code>r</code>.</p></li>
+<li><p><strong>Maximizar la vista</strong> / <strong>Restaurar el diseño de la vista</strong> maximiza temporalmente la vista seleccionada / restaura el diseño completo de las vistas.</p></li>
+<li><p><strong>Dirección del punto de vista</strong> cambia la orientación de la vista entre direcciones estándar. Al hacer clic en el botón <strong>L</strong>eft (izquierda), <strong>R</strong>ight (derecha), <strong>A</strong>nterior, <strong>P</strong>osterior, <strong>S</strong>uperior, <strong>I</strong>nferior, el contenido 3D se verá desde esa dirección.</p></li>
+<li><p>El botón <strong>Enlace de vista</strong> (View link) sincroniza las propiedades entre las vistas 3D (posición y dirección del punto de vista, regla, marcador de orientación, etc.).</p></li>
+<li><p>Alternar el modo de renderizado <strong>Ortográfico/perspectiva</strong>. El modo ortográfico (proyección paralela) es útil para evaluar el tamaño, porque el tamaño del objeto mostrado no depende de la distancia al punto de vista. El modo perspectiva ofrece una mejor percepción de la profundidad, porque los objetos que están más cerca se ven más grandes.</p></li>
+<li><p><strong>Regla</strong> (Ruler) controla la visualización de la regla. Solo está disponible en el modo de renderizado ortográfico.</p></li>
+<li><p><strong>Visualización estereoscópica</strong> (Stereo viewing) habilita la visualización estereoscópica. Los modos rojo/azul y anáglifo solo requieren unas económicas gafas con cristales de color rojo/azul. Otros modos requieren hardware de pantalla 3D especial. Tenga en cuenta que la <a href="https://www.slicervr.org/">extensión SlicerVirtualReality</a> ofrece una experiencia superior de visualización e interacción estereoscópica, con visualización 3D totalmente inmersiva con un solo clic de un botón, e interacción rica con los objetos de la escena usando controladores 3D.</p></li>
+<li><p>Más opciones (…)</p>
+<ul>
+<li><p><strong>Usar depth peeling</strong> debe estar habilitado para un renderizado correcto de las superficies semitransparentes (en modelos, marcas, etc.). Puede hacer que las actualizaciones del renderizado sean un poco más lentas y producir artefactos cuando se usa el renderizado de volumen en la vista.</p></li>
+<li><p><strong>Mostrar/ocultar cuadros por segundo (FPS)</strong> muestra la velocidad de renderizado en la esquina de la vista.</p></li>
+</ul></li>
+<li><p><strong>Marcador de orientación</strong> controla la visualización de la figura humana, el cubo, etc. en la esquina inferior derecha.</p></li>
+<li><p><strong>Opciones de visibilidad</strong> controla la visibilidad del color de fondo de la vista y de los componentes mostrados.</p></li>
+<li><p><strong>Spin</strong> (Girar) hace que la vista gire continuamente.</p></li>
+<li><p><strong>Rock</strong> (Balancear) hace que la vista se balancee continuamente de izquierda a derecha.</p></li>
+<li><p><strong>Acercar/alejar</strong> (Zoom in/out) acerca/aleja ligeramente la vista. Botones cómodos para pantallas táctiles.</p></li>
+<li><p>El <strong>Bloqueo de inclinación</strong> (Tilt Lock) puede activarse/desactivarse usando el atajo de teclado <code>Ctrl</code> + <code>b</code>. En el modo de bloqueo de inclinación, la rotación de la vista 3D se restringe al eje de azimut (dirección izquierda-derecha) al deshabilitar la rotación alrededor del eje de elevación (dirección arriba-abajo).</p></li>
+</ul>
+<h4 id="sombras-ambientales">Sombras ambientales</h4>
+<ul>
+<li><p>Visibilidad de las sombras: si está habilitada, se muestran sombras ambientales para mejorar la percepción de la profundidad</p>
+<ul>
+<li><p>Escala de tamaño (Size scale; predeterminado: 0): tamaño de los detalles que se enfatizarán con las sombras. Los valores más bajos enfatizan las irregularidades de la superficie (protuberancias y depresiones). Una escala de tamaño más alta hace que las regiones más grandes que están mucho más lejos se vean mucho más oscuras. El valor óptimo puede determinarse ajustando el valor a partir del valor más alto, de forma gradual, hasta que las regiones que están detrás de los objetos se vean más oscuras. Los valores muy altos (1.5 a 3.0) pueden hacer que toda la imagen se vea más oscura, por lo que es importante bajar de este rango, normalmente hasta alrededor de 0.5 a 1.5.</p></li>
+<li><p>Escala de intensidad (Intensity scale; predeterminado: 1): intensidad del oscurecimiento por las sombras. Aumente el valor para hacer las sombras más oscuras.</p></li>
+<li><p>Desplazamiento de intensidad (Intensity shift; predeterminado: 0): cantidad mínima de oclusión requerida para un oscurecimiento visible por las sombras. Normalmente solo es necesario aumentar este valor si se aumenta la escala de intensidad, lo que hace que toda la imagen se vea algo más oscura. En este caso, aumentar el desplazamiento de intensidad puede compensar el oscurecimiento general.</p></li>
+<li><p>Umbral de opacidad del volumen (Volume opacity threshold; del 0 % al 100 %; predeterminado: 25 %): este valor solo afecta el renderizado de volumen. Los vóxeles que tengan una opacidad superior a este valor proyectarán sombras. Elegir un valor demasiado bajo produce artefactos oscuros en las regiones que tienen una opacidad muy baja. Elegir un valor demasiado alto produce artefactos cerca de las regiones opacas que tienen un valor de opacidad algo más bajo.</p></li>
+</ul></li>
+</ul>
+<p>Ejemplos: <img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/user_interface_ambient_shadows.png" /></p>
+<p>Nota</p>
+<p>La configuración predeterminada de las sombras ambientales puede elegirse en el menú de la aplicación (Edit / Application Settings / Views / 3D viewer defaults).</p>
+<h3 id="vista-de-corte">Vista de corte</h3>
+<p>Se proporcionan tres vistas de corte predeterminadas (con barras de colores Rojo, Amarillo y Verde) en las que pueden mostrarse cortes 2D Axiales, Sagitales, Coronales u Oblicuos de las imágenes de volumen. Las vistas de corte genéricas adicionales tienen una barra de color gris y un número de identificación en su esquina superior izquierda.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/user_interface_slice_view_controls.png" /></p>
+<p>Controles de la vista de corte: la barra de color que cruza cualquier vista de corte muestra un icono de chincheta a su izquierda (<strong>Mostrar controles de la vista</strong>). Cuando el mouse pasa sobre este icono, se muestra un panel para configurar la vista de corte. El panel se oculta cuando el mouse se aleja. Para mostrar este panel de forma permanente, simplemente haga clic en el icono de la chincheta. Para más opciones, haga clic en el icono de doble flecha (<strong>Mostrar todas las opciones</strong>).</p>
+<p>El módulo View Controllers (Controladores de vista) ofrece una forma alternativa de mostrar estos controladores en el Panel del módulo.</p>
+<ul>
+<li><p><strong>Restablecer el campo de visión</strong> (cuadrado pequeño) centra el corte sobre el volumen de fondo actual.</p></li>
+<li><p>El botón del “ojo” <strong>Mostrar en 3D</strong> (Show in 3D) de la fila superior puede mostrar el corte actual en las vistas 3D. El menú desplegable del botón contiene opciones avanzadas para personalizar cómo se renderiza este corte: “…match volume” significa que las propiedades se toman del volumen completo, mientras que “…match 2D” significa que las propiedades se copian de la vista de corte actual (por ejemplo, copia la posición de zoom y desplazamiento). Normalmente, estas diferencias son sutiles y la configuración puede dejarse en sus valores predeterminados.</p></li>
+<li><p><strong>Orientación del corte</strong> (Slice orientation) le permite elegir la orientación de esta vista de corte.</p></li>
+<li><p><strong>Reformat</strong> permite la manipulación interactiva de la orientación del corte.</p></li>
+<li><p>El <strong>control deslizante de desplazamiento del corte</strong> (Slice offset slider) permite recorrer el volumen en cortes. El tamaño del paso se establece de forma predeterminada según el espaciado del volumen de fondo, pero puede modificarse haciendo clic en el botón “Spacing and field of view” (Espaciado y campo de visión). La etiqueta junto al valor de desplazamiento (por ejemplo, <code>S</code>, <code>L</code>, <code>A</code>, <code>IL</code>, <code>IRP</code>) refleja la dirección normal del corte. Si el control deslizante de desplazamiento se mueve hacia la derecha, el corte se mueve en esa dirección normal. Si la dirección normal del corte no está alineada con un eje, la etiqueta contiene una combinación de direcciones, con el orden de los ejes reflejando el predominio del eje. Por ejemplo, si la normal del plano apunta hacia anterior y ligeramente a la izquierda, la etiqueta es <code>AL</code>, mientras que si la normal del plano apunta principalmente a la izquierda y ligeramente hacia anterior, la etiqueta es <code>LA</code>.</p></li>
+<li><p>El <strong>modo de fusión</strong> (Blending mode) especifica cómo se mezclan las capas de primer plano y de fondo.</p></li>
+<li><p><strong>Espaciado y campo de visión</strong> (Spacing and field of view): el espaciado define el incremento del control deslizante de desplazamiento del corte. El campo de visión establece el nivel de zoom del corte.</p></li>
+<li><p><strong>Rotar al plano del volumen</strong> (Rotate to volume plane) cambia la orientación del corte para que coincida con la orientación de adquisición más cercana del volumen mostrado.</p></li>
+<li><p><strong>Marcador de orientación</strong> controla la visualización de la figura humana, el cubo, etc. en la esquina inferior derecha.</p></li>
+<li><p><strong>Regla</strong> (Ruler) controla la visualización de la regla en la vista de corte.</p></li>
+<li><p>El botón <strong>Enlace de vista</strong> (View link) sincroniza las propiedades de las vistas del mismo grupo de vistas, como la selección de volúmenes de primer plano/fondo/etiqueta, la opacidad de los volúmenes de primer plano/etiqueta y el factor de zoom.</p>
+<ul>
+<li><p>Para las vistas paralelas (es decir, que están configuradas con la misma orientación, como <code>axial</code>), la posición del centro de la vista también se sincroniza.</p></li>
+<li><p>Un clic prolongado en el botón expone la opción <strong>hot-linked</strong> (enlace en caliente), que controla cuándo se sincronizan las propiedades (de inmediato o cuando se suelta el botón del mouse).</p></li>
+<li><p>Un grupo de vistas normalmente consta de 3 vistas ortogonales (por ejemplo, en la vista <code>Four-Up</code>, las vistas <code>R</code>, <code>G</code>, <code>Y</code> están en el mismo grupo). En los diseños que contienen varios tripletes de vistas de corte, cada triplete forma un grupo separado (por ejemplo, en el diseño <code>Three over three</code> hay dos grupos de vistas: un grupo es <code>R</code>, <code>G</code>, <code>Y</code> y el otro grupo es <code>R+</code>, <code>G+</code>, <code>Y+</code>).</p></li>
+</ul></li>
+<li><p>Los botones del “ojo” de <strong>Visibilidad de capa</strong> (Layer visibility) y los selectores numéricos de <strong>Opacidad de capa</strong> (Layer opacity) controlan la visibilidad de las segmentaciones y los volúmenes en la vista de corte.</p></li>
+<li><p>El control deslizante de <strong>Opacidad del volumen de primer plano</strong> (Foreground volume opacity) permite hacer una transición gradual entre los volúmenes de primer plano y de fondo.</p></li>
+<li><p>La <strong>Interpolación</strong> (Interpolation) permite mostrar los valores de los vóxeles sin interpolación. Se recomienda mantener la interpolación habilitada y deshabilitarla solo para pruebas y resolución de problemas.</p></li>
+<li><p>Los <strong>selectores de nodos</strong> (Node selectors) se usan para elegir qué volúmenes de fondo, primer plano y mapa de etiquetas y qué segmentaciones se muestran en esta vista de corte. Nota: pueden mostrarse varias segmentaciones en una vista de corte, pero los controles de la vista de corte solo permiten ajustar la visibilidad del nodo de segmentación actualmente seleccionado.</p></li>
+</ul>
+<p>Eliminado en la versión 5.10:</p>
+<ul>
+<li>Se eliminó la función <strong>Lightbox</strong> para seleccionar una vista en mosaico (también conocida como hoja de contactos). En su lugar, puede usarse la opción <em>Lightbox image columns</em> (Columnas de imágenes de Lightbox) que ofrece el módulo <a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/screencapture.html">Screen Capture</a>.</li>
+</ul>
+<h2 id="atajos-de-mouse-y-teclado">Atajos de mouse y teclado</h2>
+<h3 id="combinaciones-de-teclas-alternativas-para-macos">Combinaciones de teclas alternativas para macOS</h3>
+<p>Al usar atajos en macOS, reemplace las siguientes teclas con su versión correspondiente de macOS.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Tecla</th>
+<th>Tecla de macOS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Ctrl</code></td>
+<td><code>Command</code> / <code>⌘</code></td>
+</tr>
+<tr class="even">
+<td><code>Alt</code></td>
+<td><code>Option</code> / <code>⌥</code> / <code>Alt</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="atajos-genéricos">Atajos genéricos</h3>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Atajo</th>
+<th>Operación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>f</code></td>
+<td>buscar un módulo por nombre (presione <code>Enter</code> para seleccionar)</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>o</code></td>
+<td>agregar datos desde un archivo</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>s</code></td>
+<td>guardar datos en archivos</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>w</code></td>
+<td>cerrar la escena</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>0</code></td>
+<td>mostrar el Registro de errores</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>1</code></td>
+<td>mostrar la Ayuda de la aplicación</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>2</code></td>
+<td>mostrar la Configuración de la aplicación</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>3</code> / <code>Ctrl</code> + <code>`</code></td>
+<td>mostrar/ocultar la Consola de Python</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>4</code></td>
+<td>mostrar el Administrador de extensiones</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>5</code></td>
+<td>mostrar/ocultar el Panel del módulo</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>h</code></td>
+<td>abrir el módulo de inicio predeterminado (configurable en la Configuración de la aplicación)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vistas-de-corte">Vistas de corte</h3>
+<p>Los siguientes atajos están disponibles cuando una vista de corte está activa. Para activar una vista, haga clic dentro de ella: si no desea cambiar nada en la vista, simplemente actívela y luego haga <code>clic derecho</code> sin mover el mouse. Tenga en cuenta que simplemente pasar el mouse por encima de una vista de corte no la activará.</p>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Atajo</th>
+<th>Operación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>clic derecho</code> + <code>arrastrar arriba/abajo</code></td>
+<td>acercar/alejar la imagen (<code>Alt</code> opcional, útil durante la colocación de puntos)</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>rueda del mouse</code></td>
+<td>acercar/alejar la imagen</td>
+</tr>
+<tr class="odd">
+<td><code>clic central</code> + <code>arrastrar</code></td>
+<td>desplazar (trasladar) la vista (<code>Alt</code> opcional, útil durante la colocación de puntos)</td>
+</tr>
+<tr class="even">
+<td><code>Shift</code> + <code>clic izquierdo</code> + <code>arrastrar</code></td>
+<td>desplazar (trasladar) la vista (<code>Alt</code> opcional, útil durante la colocación de puntos)</td>
+</tr>
+<tr class="odd">
+<td><code>flecha izquierda</code> / <code>flecha derecha</code></td>
+<td>ir al corte anterior/siguiente</td>
+</tr>
+<tr class="even">
+<td><code>b</code> / <code>f</code></td>
+<td>ir al corte anterior/siguiente</td>
+</tr>
+<tr class="odd">
+<td><code>Shift</code> + <code>mover el mouse</code></td>
+<td>mover la mira en todas las vistas</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>Alt</code> + <code>clic izquierdo</code> + <code>arrastrar</code></td>
+<td>rotar la intersección de cortes de las otras vistas (las <code>Intersecciones de cortes</code> deben estar habilitadas en la barra de herramientas de <code>Selección de mira</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>v</code></td>
+<td>alternar la visibilidad del corte en la vista 3D</td>
+</tr>
+<tr class="even">
+<td><code>r</code></td>
+<td>restablecer el zoom y el desplazamiento a los valores predeterminados</td>
+</tr>
+<tr class="odd">
+<td><code>g</code></td>
+<td>alternar la segmentación o el volumen de mapa de etiquetas</td>
+</tr>
+<tr class="even">
+<td><code>t</code></td>
+<td>alternar la visibilidad del volumen de primer plano</td>
+</tr>
+<tr class="odd">
+<td><code>[</code> / <code>]</code></td>
+<td>usar el volumen anterior/siguiente como fondo</td>
+</tr>
+<tr class="even">
+<td><code>{</code> / <code>}</code></td>
+<td>usar el volumen anterior/siguiente como primer plano</td>
+</tr>
+<tr class="odd">
+<td><code>doble clic izquierdo</code></td>
+<td>maximizar la vista/restaurar el diseño de la vista</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vistas-3d">Vistas 3D</h3>
+<p>Los siguientes atajos están disponibles cuando una vista 3D está activa. Para activar una vista, haga clic dentro de ella: si no desea cambiar nada en la vista, simplemente actívela y luego haga <code>clic derecho</code> sin mover el mouse. Tenga en cuenta que simplemente pasar el mouse por encima de una vista de corte no la activará.</p>
+<table>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Atajo</th>
+<th>Operación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Shift</code> + <code>mover el mouse</code></td>
+<td>mover la mira en todas las vistas</td>
+</tr>
+<tr class="even">
+<td><code>clic izquierdo</code> + <code>arrastrar</code></td>
+<td>rotar la vista (<code>Alt</code> opcional, útil durante la colocación de puntos)</td>
+</tr>
+<tr class="odd">
+<td><code>flecha izquierda</code> / <code>flecha derecha</code></td>
+<td>rotar la vista</td>
+</tr>
+<tr class="even">
+<td><code>flecha arriba</code> / <code>flecha abajo</code></td>
+<td>rotar la vista</td>
+</tr>
+<tr class="odd">
+<td><code>Fin</code> o <code>Teclado numérico 1</code></td>
+<td>rotar para ver desde anterior</td>
+</tr>
+<tr class="even">
+<td><code>Shift</code> + <code>Fin</code> o <code>Shift</code> + <code>Teclado numérico 1</code></td>
+<td>rotar para ver desde posterior</td>
+</tr>
+<tr class="odd">
+<td><code>Av Pág</code> o <code>Teclado numérico 3</code></td>
+<td>rotar para ver desde el lado izquierdo</td>
+</tr>
+<tr class="even">
+<td><code>Shift</code> + <code>Av Pág</code> o <code>Shift</code> + <code>Teclado numérico 3</code></td>
+<td>rotar para ver desde el lado derecho</td>
+</tr>
+<tr class="odd">
+<td><code>Inicio</code> o <code>Teclado numérico 7</code></td>
+<td>rotar para ver desde superior</td>
+</tr>
+<tr class="even">
+<td><code>Shift</code> + <code>Inicio</code> o <code>Shift</code> + <code>Teclado numérico 7</code></td>
+<td>rotar para ver desde inferior</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>clic izquierdo</code> + <code>arrastrar</code></td>
+<td>rotar la vista en sentido horario/antihorario</td>
+</tr>
+<tr class="even">
+<td><code>clic derecho</code> + <code>arrastrar arriba/abajo</code></td>
+<td>acercar/alejar la vista (<code>Alt</code> opcional, útil durante la colocación de puntos)</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>rueda del mouse</code></td>
+<td>acercar/alejar la vista</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>b</code></td>
+<td>alternar el bloqueo de inclinación</td>
+</tr>
+<tr class="odd">
+<td><code>+</code> / <code>-</code></td>
+<td>acercar/alejar la vista</td>
+</tr>
+<tr class="even">
+<td><code>clic central</code> + <code>arrastrar</code></td>
+<td>desplazar (trasladar) la vista (<code>Alt</code> opcional, útil durante la colocación de puntos)</td>
+</tr>
+<tr class="odd">
+<td><code>Shift</code> + <code>clic izquierdo</code> + <code>arrastrar</code></td>
+<td>desplazar (trasladar) la vista (<code>Alt</code> opcional, útil durante la colocación de puntos)</td>
+</tr>
+<tr class="even">
+<td><code>Shift</code> + <code>flecha izquierda</code> / <code>Shift</code> + <code>flecha derecha</code></td>
+<td>desplazar (trasladar) la vista</td>
+</tr>
+<tr class="odd">
+<td><code>Shift</code> + <code>flecha arriba</code> / <code>Shift</code> + <code>flecha abajo</code></td>
+<td>desplazar (trasladar) la vista</td>
+</tr>
+<tr class="even">
+<td><code>Shift</code> + <code>Teclado numérico 2</code> / <code>Shift</code> + <code>Teclado numérico 4</code></td>
+<td>desplazar (trasladar) la vista</td>
+</tr>
+<tr class="odd">
+<td><code>Shift</code> + <code>Teclado numérico 6</code> / <code>Shift</code> + <code>Teclado numérico 8</code></td>
+<td>desplazar (trasladar) la vista</td>
+</tr>
+<tr class="even">
+<td><code>Teclado numérico 0</code> o <code>Insert</code></td>
+<td>restablecer el zoom y el desplazamiento, rotar a la vista estándar más cercana</td>
+</tr>
+<tr class="odd">
+<td><code>doble clic izquierdo</code></td>
+<td>maximizar la vista/restaurar el diseño de la vista</td>
+</tr>
+</tbody>
+</table>
+<p>Nota</p>
+<p>Simulación si los atajos no están disponibles en su dispositivo:</p>
+<ul>
+<li><p>Mouse de un botón: en lugar de <code>clic derecho</code>, haga <code>Ctrl</code> + <code>clic</code></p></li>
+<li><p>Trackpad: en lugar de <code>clic derecho</code>, haga <code>clic con dos dedos</code></p></li>
+</ul>
+<h3 id="consola-de-python">Consola de Python</h3>
+<p>Los siguientes atajos están disponibles en la consola de Python.</p>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Atajo</th>
+<th>Operación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Tab</code></td>
+<td>autocompletar</td>
+</tr>
+<tr class="even">
+<td><code>flecha arriba</code> / <code>flecha abajo</code></td>
+<td>historial de comandos</td>
+</tr>
+<tr class="odd">
+<td><code>Esc</code></td>
+<td>borrar la selección, volver a la línea de comandos actual, borrar la línea de comandos actual</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code> + <code>g</code></td>
+<td>ejecutar un script de Python desde un archivo</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl</code> + <code>v</code></td>
+<td>pegar un script de Python desde el portapapeles y ejecutarlo</td>
+</tr>
+</tbody>
+</table>
+<p>Tenga en cuenta que, cuando el código se pega en una línea vacía, todo el código del portapapeles se ejecuta <em>de una sola vez</em>. Si la línea de comandos actual no está vacía, el código del portapapeles se pega en la consola y se ejecuta <em>línea por línea</em>. Cuando el código se ejecuta línea por línea, el comportamiento es diferente, ya que una línea de entrada vacía cierra inmediatamente el bloque actual, y la salida se imprime después de ejecutar cada línea.</p>
+</body>
+</html>
