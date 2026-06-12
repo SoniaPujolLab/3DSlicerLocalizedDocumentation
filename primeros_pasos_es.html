@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Primeros pasos — 3D Slicer</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <style>body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #222; max-width: 900px; margin: 0 auto; padding: 2rem; }
+  h1, h2, h3, h4 { color: #14315a; line-height: 1.25; }
+  h1 { border-bottom: 3px solid #2e6da4; padding-bottom: .3rem; }
+  h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .2rem; margin-top: 2rem; }
+  a { color: #2e6da4; }
+  table { border-collapse: collapse; width: 100%; font-size: .85rem; display: block; overflow-x: auto; }
+  th, td { border: 1px solid #d0d7de; padding: .4rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #f0f4f8; }
+  tr:nth-child(even) { background: #f9fafb; }
+  img { max-width: 100%; }
+  pre { background: #f6f8fa; padding: .8rem 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; }
+  code { background: #f0f4f8; padding: .1rem .3rem; border-radius: 4px; font-size: .9em; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 4px solid #2e6da4; margin-left: 0; padding-left: 1rem; color: #555; }</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Primeros pasos — 3D Slicer</h1>
+</header>
+<h1 id="primeros-pasos">Primeros pasos</h1>
+<p>Le damos la bienvenida a la comunidad de 3D Slicer. Esta página contiene la información que necesita para comenzar a usar 3D Slicer, incluido cómo instalarlo, cómo usar las funciones básicas y dónde encontrar más información.</p>
+<h2 id="requisitos-del-sistema">Requisitos del sistema</h2>
+<p>3D Slicer funciona en cualquier computadora Windows, Mac o Linux lanzada en los últimos 5 años. Las computadoras más antiguas pueden funcionar (dependiendo principalmente de las capacidades gráficas).</p>
+<p>Slicer también puede ejecutarse en máquinas virtuales y contenedores docker. Por ejemplo, <a href="https://mybinder.org/v2/gh/Slicer/SlicerNotebooks/master?filepath=SlicerWeb.ipynb">3D Slicer + cuaderno Jupyter en un navegador web</a> está disponible de forma gratuita a través del servicio Binder (no se necesita instalación; la aplicación puede ejecutarse en cualquier navegador web).</p>
+<h3 id="versiones-de-sistema-operativo">Versiones de sistema operativo</h3>
+<ul>
+<li><p>Windows: Windows 11 con todas las actualizaciones recomendadas instaladas. Microsoft ya no brinda soporte a Windows 10 (ni a versiones anteriores) y Slicer no se prueba en estas versiones heredadas del sistema operativo, aunque aún podría funcionar.</p></li>
+<li><p>macOS: macOS Sonoma (14) o posterior (sistemas basados tanto en Intel como en ARM). Se recomienda la última versión pública.</p></li>
+<li><p>Linux: Ubuntu 22.04 o posterior<br />
+Debian 11 o posterior<br />
+Fedora 35 o posterior<br />
+AlmaLinux 8 o posterior. Se recomienda la última versión LTS (soporte a largo plazo).</p></li>
+</ul>
+<h3 id="configuración-de-hardware-recomendada">Configuración de hardware recomendada</h3>
+<ul>
+<li><p>Memoria: más de 4 GB (se recomiendan 8 o más). Como regla general, tenga 10 veces más memoria que la cantidad de datos que cargue.</p></li>
+<li><p>Pantalla: una resolución mínima de 1366 por 768 (se recomienda 1920 por 1080 o superior).</p></li>
+<li><p>Gráficos: se recomienda hardware gráfico dedicado (GPU discreta) con memoria propia para una renderización de volumen rápida. GPU: los gráficos deben admitir como mínimo OpenGL 3.2. Una tarjeta gráfica integrada es suficiente para la visualización básica. Se recomienda una tarjeta gráfica discreta (como una GPU NVidia) para la renderización de volumen 3D interactiva y la renderización rápida de escenas complejas. La memoria de textura de la GPU (VRAM) debe ser mayor que su conjunto de datos más grande (por ejemplo, si trabaja con datos de 2 GB, obtenga una VRAM &gt; 4 GB) y verifique que sus imágenes encajen dentro de las dimensiones máximas de textura del hardware de su GPU. Salvo la renderización, la mayoría de los cálculos se realizan en la CPU, por lo que tener una GPU más rápida generalmente no afectará la velocidad global de la aplicación.</p></li>
+<li><p>Algunos cálculos en 3D Slicer son multihilo y se beneficiarán de configuraciones con varios núcleos y varias CPU.</p></li>
+<li><p>Dispositivo de interfaz: se recomienda un mouse de tres botones con rueda de desplazamiento. Se admiten lápiz, pantalla multitáctil, panel táctil y tableta gráfica. Se admiten todos los visores de realidad virtual compatibles con OpenVR para la visualización en realidad virtual.</p></li>
+<li><p>Conexión a Internet para acceder a extensiones, paquetes de Python, documentación en línea, conjuntos de datos de muestra y tutoriales.</p></li>
+</ul>
+<h2 id="instalación-de-3d-slicer">Instalación de 3D Slicer</h2>
+<p>Para descargar Slicer, haga clic <a href="https://download.slicer.org/">aquí</a>.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/getting_started_download.png" /></p>
+<p><strong>Notas:</strong></p>
+<ul>
+<li><p>La “Versión preliminar” de 3D Slicer (denominada “Slicer Preview Release”) se actualiza a diario (el proceso comienza a las 11:00 p. m., hora del este, y tarda algunas horas en completarse) y representa el desarrollo más reciente, incluidas nuevas funciones y correcciones. No se proporcionan actualizaciones <em>continuas</em> de extensiones para las versiones preliminares: las extensiones disponibles para una versión preliminar corresponden a la última versión que estaba disponible en el momento en que se creó esa versión. Para obtener extensiones actualizadas, debe instalarse una nueva versión preliminar.</p></li>
+<li><p>La “Versión estable” de 3D Slicer (denominada “Slicer Stable Release”) suele actualizarse algunas veces al año y se prueba de forma más rigurosa. Se proporcionan actualizaciones continuas de extensiones para la <em>última</em> Versión estable de Slicer, pero no para versiones anteriores. Por ejemplo, si la última Versión estable de Slicer es Slicer-5.2.2 y el usuario tiene instalado Slicer-5.2.1, entonces el usuario ya no recibirá actualizaciones de extensiones. Para comprobar si tiene instaladas las últimas versiones de la aplicación y las extensiones, puede ir al módulo <code>Welcome</code> (Bienvenida) y, en la sección <code>Updates</code> (Actualizaciones), hacer clic en el botón <code>Check now</code> (Comprobar ahora).</p></li>
+<li><p>Por lo general, Slicer es sencillo de instalar en todas las plataformas. Es posible instalar varias versiones de la aplicación en la misma cuenta de usuario sin que interfieran entre sí. Si tiene problemas misteriosos con su instalación, puede intentar eliminar los <a href="https://slicer.readthedocs.io/en/latest/user_guide/settings.html#settings-file-location">archivos de configuración de la aplicación</a>.</p></li>
+<li><p>Solo hay instaladores de Slicer de 64 bits disponibles para descargar. Los desarrolladores pueden intentar compilar versiones de 32 bits por su cuenta si necesitan ejecutar Slicer en un sistema operativo de 32 bits. Dicho esto, esto debe considerarse con cuidado, ya que muchas tareas de investigación clínica, como el procesamiento de grandes conjuntos de datos volumétricos de TC o RM, requieren más memoria de la que puede manejar un programa de 32 bits.</p></li>
+</ul>
+<p>Una vez descargado, siga las instrucciones a continuación para completar la instalación:</p>
+<h3 id="windows">Windows</h3>
+<ul>
+<li><p>Ejecute el instalador.</p>
+<ul>
+<li>Limitación actual: la ruta de instalación solo debe contener caracteres en inglés (<a href="https://en.wikipedia.org/wiki/ASCII#Printable_characters">imprimibles ASCII</a>), porque de lo contrario algunos paquetes de Python podrían no cargarse correctamente (consulte este <a href="https://github.com/Slicer/Slicer/issues/5383">problema</a> para más detalles).</li>
+</ul></li>
+<li><p>Ejecute Slicer desde el menú de inicio de Windows.</p></li>
+<li><p>Use “Aplicaciones y características” en la configuración de Windows para eliminar la aplicación.</p></li>
+</ul>
+<h3 id="mac">Mac</h3>
+<ul>
+<li><p>Abra el paquete de instalación (archivo .dmg).</p></li>
+<li><p>Arrastre la aplicación Slicer (Slicer.app) a su carpeta de Aplicaciones (u otra ubicación de su elección).</p>
+<ul>
+<li>Este paso es necesario porque el contenido de un archivo .dmg se abre como un volumen de solo lectura, y no es posible instalar extensiones ni paquetes de Python en un volumen de solo lectura.</li>
+</ul></li>
+<li><p>Elimine la carpeta Slicer.app para desinstalar.</p></li>
+</ul>
+<p>Nota para instalar una Versión preliminar: actualmente, los paquetes de las versiones preliminares no están firmados. Por lo tanto, cuando la aplicación se inicia por primera vez, se muestra el siguiente mensaje: “Slicer… no se puede abrir porque proviene de un desarrollador no identificado”. Para resolver este error, localice la aplicación en el Finder, haga clic derecho (clic con dos dedos) y haga clic en <code>Open</code> (Abrir). Cuando aparezca <code>This app can't be opened</code> (No se puede abrir esta aplicación), pulse cancelar. Vuelva a hacer clic derecho y elija <code>Open</code> (Abrir) (sí, debe repetir lo mismo que hizo antes; el resultado será diferente al de la primera vez). Haga clic en el botón <code>Open</code> (Abrir) o <code>Open anyway</code> (Abrir de todos modos) para iniciar la aplicación. Consulte más explicaciones y técnicas alternativas <a href="https://support.apple.com/en-my/guide/mac-help/mh40616/mac">aquí</a>.</p>
+<h4 id="instalación-con-homebrew">Instalación con Homebrew</h4>
+<p>Slicer puede instalarse con un solo comando de terminal usando el gestor de paquetes <a href="https://brew.sh/">Homebrew</a>:</p>
+<pre><code>brew install --cask slicer  # para instalar
+brew upgrade slicer         # para actualizar
+brew uninstall slicer       # para desinstalar
+</code></pre>
+<p>Este procedimiento evita el típico proceso de buscar en Google, descargar, montar y arrastrar para instalar aplicaciones en macOS.</p>
+<p>Las versiones preliminares pueden instalarse usando <a href="https://github.com/Homebrew/homebrew-cask-versions"><code>homebrew-cask-versions</code></a>:</p>
+<pre><code>brew tap homebrew/cask-versions     # debe ejecutarse una vez
+brew install --cask slicer-preview  # para instalar
+brew upgrade slicer-preview         # para actualizar
+brew uninstall slicer-preview       # para desinstalar
+</code></pre>
+<h3 id="linux">Linux</h3>
+<ul>
+<li><p>Abra el archivo comprimido tar.gz y copie el directorio a la ubicación de su elección.</p></li>
+<li><p>Puede ser necesario instalar paquetes adicionales según la distribución y versión de Linux, como se describe en las subsecciones a continuación.</p></li>
+<li><p>Ejecute el archivo ejecutable <code>Slicer</code>.</p></li>
+<li><p>Elimine el directorio para desinstalar.</p></li>
+</ul>
+<p><strong>Notas:</strong></p>
+<ul>
+<li><p>Se espera que Slicer funcione en la gran mayoría de las distribuciones de Linux de escritorio y servidor. Se requiere que el sistema proporcione al menos GLIBC 2.17 y GLIBCCC 3.4.19. Para más detalles, lea <a href="https://www.python.org/dev/peps/pep-0599/#the-manylinux2014-policy">aquí</a>.</p></li>
+<li><p>Obtener argumentos de línea de comandos y salidas de procesos que contienen caracteres no ASCII requiere que el sistema use una configuración regional UTF-8. Si el sistema usa una configuración regional diferente, puede usarse el comando <code>export LANG="C.UTF-8"</code> antes de iniciar la aplicación para cambiar a una configuración regional aceptable.</p></li>
+</ul>
+<h4 id="ubuntu-24.04-noble-numbat">Ubuntu 24.04 (Noble Numbat)</h4>
+<pre><code>sudo apt-get install libglu1-mesa libpulse-mainloop-glib0 libnss3 libasound2t64 qt5dxcb-plugin
+</code></pre>
+<h4 id="ubuntu-22.04-jammy-jellyfish-debian-12-bookworm-debian-11-bullseye">Ubuntu 22.04 (Jammy Jellyfish), Debian 12 (bookworm), Debian 11 (bullseye)</h4>
+<pre><code>sudo apt-get install libglu1-mesa libpulse-mainloop-glib0 libnss3 libasound2 qt5dxcb-plugin libsm6
+</code></pre>
+<p>Advertencia</p>
+<p>Los usuarios de Debian 10.12 pueden encontrar un error al iniciar Slicer:</p>
+<pre><code>Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
+qt.qpa.plugin: Could not load the Qt platform plugin &quot;xcb&quot; in &quot;&quot; even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: xcb.
+</code></pre>
+<p><a href="https://forum.qt.io/topic/93247/qt-qpa-plugin-could-not-load-the-qt-platform-plugin-xcb-in-even-though-it-was-found/81">La solución</a> es crear un enlace simbólico a <code>libxcb-util.so</code> o a <code>libxcb-util.so.0.0.0</code>, según cuál biblioteca esté presente. Así, el comando debería ser:</p>
+<pre><code>sudo ln -s /usr/lib/x86_64-linux-gnu/libxcb-util.so /usr/lib/x86_64-linux-gnu/libxcb-util.so.1
+</code></pre>
+<p>o:</p>
+<pre><code>sudo ln -s /usr/lib/x86_64-linux-gnu/libxcb-util.so.0.0.0 /usr/lib/x86_64-linux-gnu/libxcb-util.so.1
+</code></pre>
+<h4 id="archlinux">ArchLinux</h4>
+<p>Hay paquetes contribuidos por usuarios en <a href="https://aur.archlinux.org/">AUR</a></p>
+<ul>
+<li><p><a href="https://aur.archlinux.org/packages/3dslicer-bin">3dslicer-bin</a>: este paquete reempaqueta el binario oficial para mayor comodidad. Tenga en cuenta que el Slicer oficial se compila con <code>Slicer_STORE_SETTINGS_IN_APPLICATION_HOME_DIR=ON</code>, se instala en <code>/opt</code>, donde un usuario sin privilegios de root no tiene permiso de escritura, por lo que el usuario no podrá instalar extensiones ni actualizar la configuración de la aplicación.</p></li>
+<li><p><a href="https://aur.archlinux.org/packages/3dslicer">3dslicer</a>: puede compilar el paquete desde el código fuente usando este archivo <code>PKGBUILD</code>, o simplemente instalarlo desde un repositorio no oficial: <a href="https://wiki.archlinux.org/title/Unofficial_user_repositories#archlinuxcn">repositorio archlinuxcn</a>.</p></li>
+<li><p><a href="https://aur.archlinux.org/packages/3dslicer-git">3dslicer-git</a>: igual que <a href="https://aur.archlinux.org/packages/3dslicer">3dslicer</a> pero usando el código fuente más reciente.</p></li>
+</ul>
+<h4 id="fedora-40-39-38-37-36-35">Fedora 40, 39, 38, 37, 36, 35</h4>
+<p>Instale las dependencias:</p>
+<pre><code>sudo dnf install mesa-libGLU mesa-libGL libnsl libXrender pulseaudio-libs-glib2 nss libXcomposite libXdamage libXrandr ftgl libXcursor libXi libXtst alsa-lib qt5-qtx11extras
+</code></pre>
+<p>Advertencia</p>
+<p>La biblioteca libcrypto.so.1.1 incluida en la instalación de Slicer es incompatible con las bibliotecas del sistema utilizadas por Fedora 35. La solución, hasta que se actualice, es mover o eliminar los archivos libcrypto incluidos:</p>
+<pre><code>$SLICER_ROOT/lib/Slicer-5.xx/libcrypto.*
+</code></pre>
+<p>Si al hacer doble clic en la aplicación no se inicia, pruebe los siguientes pasos en orden:</p>
+<ol type="1">
+<li>Verifique los permisos de ejecución de la aplicación</li>
+</ol>
+<ul>
+<li><p>Haga clic derecho en la aplicación → <em>Propiedades</em> → asegúrese de que <strong>“Es ejecutable como un programa”</strong> esté marcado.</p></li>
+<li><p>O verifíquelo desde una terminal:</p></li>
+</ul>
+<pre><code>ls -la
+</code></pre>
+<pre><code>    Debería ver algo como `-rwxr-xr-x` al principio de la línea correspondiente al ejecutable.
+
+        Nota
+
+    Algunos gestores de archivos comprimidos (por ejemplo, ciertas herramientas `unrar`/`unzip`) pueden requerir ejecutar la extracción con `sudo` para restaurar los permisos de archivo correctos.
+
+    Si faltan los permisos de ejecución, agréguelos con:</code></pre>
+<pre><code>chmod +x Slicer
+</code></pre>
+<ol start="2" type="1">
+<li>Inicie desde la terminal</li>
+</ol>
+<pre><code>./Slicer
+</code></pre>
+<ol start="3" type="1">
+<li>Si obtiene el error</li>
+</ol>
+<pre><code>error: Failed to obtain launcher executable name !
+</code></pre>
+<pre><code>intente mover el ejecutable a su carpeta *Software Home* y vuelva a hacer doble clic en la aplicación. Debería iniciarse correctamente desde allí.</code></pre>
+<h2 id="uso-de-slicer">Uso de Slicer</h2>
+<p>3D Slicer ofrece muchas funciones y brinda a los usuarios gran flexibilidad sobre cómo usarlas. Como resultado, los nuevos usuarios pueden sentirse abrumados por la cantidad de opciones y tener dificultades para descubrir cómo realizar incluso operaciones simples. Esto es normal, y muchos usuarios han superado con éxito esta etapa difícil invirtiendo algo de tiempo en aprender a usar este software.</p>
+<p>¿Cómo aprender Slicer?</p>
+<h3 id="inicio-rápido">Inicio rápido</h3>
+<p>Puede intentar descubrir cómo funciona la aplicación cargando conjuntos de datos y explorando lo que puede hacer.</p>
+<h4 id="cargar-datos">Cargar datos</h4>
+<p>Abra 3D Slicer y, usando el panel de Bienvenida, cargue sus propios datos o descargue datos de muestra para explorar. Los datos de muestra suelen ser útiles para probar las funciones de 3D Slicer si no tiene datos propios.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/getting_started_load_data.png" /></p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/getting_started_sample_data.png" /></p>
+<h4 id="ver-datos">Ver datos</h4>
+<p>La pestaña Jerarquía de sujetos (Subject hierarchy) del módulo Data muestra todos los conjuntos de datos de la escena. Haga clic en el icono del “ojo” para mostrar u ocultar un elemento en todas las vistas.</p>
+<p>Puede personalizar las vistas (mostrar el marcador de orientación, la regla, cambiar la orientación, la transparencia) haciendo clic en la chincheta en la esquina superior izquierda del visor. En los visores de cortes, la barra horizontal puede usarse para desplazarse por los cortes o seleccionar un corte.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/getting_started_view_controllers.png" /></p>
+<h4 id="procesar-datos">Procesar datos</h4>
+<p>3D Slicer se basa en una arquitectura modular. Elija un módulo para procesar o analizar sus datos. Los módulos más importantes son los siguientes (la lista completa está disponible en la sección <a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/index.html">Módulos</a>):</p>
+<ul>
+<li><p><em>Welcome</em> (Bienvenida): el módulo predeterminado cuando se inicia 3D Slicer. El panel presenta opciones para cargar datos y personalizar 3D Slicer. Debajo de esas opciones hay menús desplegables que contienen información esencial para usar 3D Slicer.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/data.html">Data</a>: actúa como un centro de organización de datos. Enumera todos los datos actualmente en la escena y permite operaciones básicas como buscar, renombrar, eliminar y mover.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/dicom.html">DICOM</a>: importa y exporta objetos DICOM, como imágenes, segmentaciones, conjuntos de estructuras, objetos de radioterapia, etc.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/volumes.html">Volumes</a>: se usa para cambiar la apariencia de varios tipos de volúmenes.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/volumerendering.html">Volume Rendering</a>: proporciona visualización interactiva de datos de imagen 3D.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/segmentations.html">Segmentations</a>: edita las propiedades de visualización e importa/exporta segmentaciones.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/segmenteditor.html">Segment Editor</a>: segmenta volúmenes 3D usando diversas herramientas manuales, semiautomáticas y automáticas.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/markups.html">Markups</a>: permite crear y editar marcas asociadas a una escena.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/models.html">Models</a>: carga y ajusta los parámetros de visualización de los modelos. Permite al usuario cambiar la apariencia de los modelos de superficie 3D y organizarlos.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/transforms.html">Transforms</a>: este módulo se usa para crear y editar matrices de transformación. Puede establecer estas relaciones moviendo nodos de la lista Transformable a la lista Transformed, o arrastrando los nodos bajo los nodos de Transformación en el módulo Data.</p></li>
+</ul>
+<h4 id="guardar-datos">Guardar datos</h4>
+<p>Todos los datos de la escena pueden guardarse a la vez usando el menú <code>File</code> (Archivo) -&gt; <code>Save data</code> (Guardar datos), o se pueden exportar conjuntos de datos seleccionados desde el módulo <code>Data</code> haciendo clic derecho y seleccionando <code>Export to file...</code> (Exportar a archivo…) o <code>Export to DICOM...</code> (Exportar a DICOM…). Los detalles se describen en la <a href="https://slicer.readthedocs.io/en/latest/user_guide/data_loading_and_saving.html">sección de carga y guardado de datos</a>.</p>
+<h4 id="extensiones">Extensiones</h4>
+<p>3D Slicer admite complementos llamados extensiones. Una extensión puede entenderse como un paquete de distribución que agrupa uno o más módulos de Slicer. Después de instalar una extensión, los módulos asociados se presentarán al usuario como si fueran integrados. Las extensiones pueden descargarse desde el administrador de extensiones para instalar de forma selectiva las funciones que resulten útiles para el usuario final.</p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/getting_started_module_list.png" /></p>
+<p><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/getting_started_extensions_manager.png" /></p>
+<p>Para más detalles sobre cómo descargar extensiones, consulte la <a href="https://slicer.readthedocs.io/en/latest/user_guide/extensions.html#extensions-manager">documentación del Administrador de extensiones</a>. Haga clic <a href="https://www.slicer.org/wiki/Documentation/Nightly/ModuleExtensionListing/Extensions_by_category">aquí</a> para ver una lista completa de extensiones. Los enlaces de la página brindan documentación de cada extensión.</p>
+<p>Slicer es ampliable. Si le interesa personalizar o agregar funcionalidad a Slicer, haga clic <a href="https://training.slicer.org/#developer-tutorials">aquí</a>.</p>
+<h3 id="tutoriales">Tutoriales</h3>
+<p>Aprenda tanto conceptos básicos como flujos de trabajo altamente especializados a partir de los numerosos tutoriales paso a paso y en video disponibles.</p>
+<p>Pruebe el <a href="https://training.slicer.org/#stc-gen-101-welcome-tutorial">Tutorial de bienvenida</a> y el <a href="https://training.slicer.org/#stc-vis-102-data-loading-and-3d-visualization">Tutorial de carga de datos y visualización 3D</a> para aprender lo básico.</p>
+<p>Para más tutoriales, visite la <a href="https://training.slicer.org/">página de tutoriales</a>.</p>
+<h3 id="manual-del-usuario">Manual del usuario</h3>
+<p>Explore la sección <a href="https://slicer.readthedocs.io/en/latest/user_guide/user_interface.html">Interfaz de usuario</a> para encontrar una descripción general rápida de la interfaz de usuario de la aplicación, o la sección <a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/index.html">Módulos</a> para obtener una descripción detallada de cada módulo.</p>
+<h3 id="pedir-ayuda">Pedir ayuda</h3>
+<p>3D Slicer existe desde hace muchos años y ya se han formulado y respondido muchas preguntas sobre él. Si tiene alguna pregunta, puede comenzar con una búsqueda en la web; por ejemplo, busque en Google <code>slicer load jpg</code> para averiguar cómo importar una pila de imágenes jpg.</p>
+<p>La aplicación tiene una comunidad de usuarios grande, muy amable y servicial. Tenemos personas que con gusto le ayudarán con preguntas sencillas, como cómo realizar una tarea específica en Slicer, y contamos con un gran número de expertos en ingeniería y medicina que pueden aconsejarle sobre cómo resolver problemas complejos.</p>
+<p><strong>Si tiene alguna pregunta, vaya al <a href="https://discourse.slicer.org">foro de Slicer</a> y pregúntenos!</strong></p>
+<h2 id="glosario">Glosario</h2>
+<p>Los términos usados en los diversos campos de la computación de imágenes médicas y biomédicas y de las imágenes clínicas no siempre son coherentes. Esta sección define términos de uso común en 3D Slicer, especialmente aquellos que pueden tener un significado distinto en otros contextos.</p>
+<ul>
+<li><p><strong>Bounds (límites)</strong>: describe el cuadro delimitador de un objeto espacial a lo largo de 3 ejes. En VTK se define mediante 6 valores de punto flotante: <code>X_min</code>, <code>X_max</code>, <code>Y_min</code>, <code>Y_max</code>, <code>Z_min</code>, <code>Z_max</code>.</p></li>
+<li><p><strong>Brillo/contraste</strong>: especifica el mapeo lineal de los valores de vóxel al brillo de un píxel mostrado. El brillo es el desplazamiento lineal y el contraste es el multiplicador. En imágenes médicas, este mapeo lineal se especifica más comúnmente mediante valores de ventana/nivel (window/level).</p></li>
+<li><p><strong>Cell (celda)</strong>: las celdas de datos son elementos topológicos simples de las mallas, como líneas, polígonos, tetraedros, etc.</p></li>
+<li><p><strong>Leyenda de color</strong> (o barra de color, barra escalar): un widget superpuesto en los cortes o vistas 3D que muestra una leyenda de color e indica el significado de los colores.</p></li>
+<li><p><strong>Sistema de coordenadas</strong> (o marco de coordenadas, marco de referencia, espacio): se especifica por la posición del origen, las direcciones de los ejes y la unidad de distancia. Todos los sistemas de coordenadas en 3D Slicer son dextrógiros (de mano derecha).</p></li>
+<li><p><strong>Extension (extensión)</strong> (o extensión de Slicer): una colección de módulos que no viene incluida con la aplicación principal, pero que puede descargarse e instalarse usando el Administrador de extensiones.</p></li>
+<li><p><a href="https://slicer.readthedocs.io/en/latest/user_guide/extensions.html#extensions-manager"><strong>Administrador de extensiones</strong></a>: un componente de software de Slicer que permite explorar, instalar y desinstalar extensiones del <a href="https://extensions.slicer.org">Catálogo de extensiones (también conocido como la tienda de aplicaciones de Slicer)</a> directamente desde la aplicación.</p></li>
+<li><p><a href="https://github.com/Slicer/ExtensionsIndex"><strong>Índice de extensiones</strong></a>: un repositorio que contiene la descripción de cada extensión a partir de la cual se construye el Catálogo de extensiones.</p></li>
+<li><p><strong>Extent (extensión espacial)</strong>: rango de coordenadas enteras a lo largo de 3 ejes. En VTK se define mediante 6 valores, para los ejes IJK: <code>I_min</code>, <code>I_max</code>, <code>J_min</code>, <code>J_max</code>, <code>K_min</code>, <code>K_max</code>. Tanto los valores mínimos como los máximos son inclusivos, por lo que el tamaño de un arreglo es <code>(I_max - I_min + 1)</code> x <code>(J_max - J_min + 1)</code> x <code>(K_max - K_min + 1)</code>.</p></li>
+<li><p><strong>Fiducial (marcador fiducial)</strong>: representa un punto en el espacio 3D. El término proviene de la cirugía guiada por imagen, donde se usan “marcadores fiduciales” para marcar posiciones de puntos.</p></li>
+<li><p><strong>Frame (cuadro)</strong>: un punto temporal en una secuencia de tiempo. Para evitar ambigüedad, este término no se usa para referirse a un corte de un volumen.</p></li>
+<li><p><strong>Geometría</strong>: especifica la ubicación y la forma de un objeto en el espacio 3D. Consulte el término “Volumen” para la definición de la geometría de la imagen.</p></li>
+<li><p><strong>Intensidad de imagen</strong>: normalmente se refiere al valor de un vóxel. El brillo y el color del píxel mostrado se calculan a partir de este valor según la ventana/nivel elegidos y la tabla de búsqueda de color.</p></li>
+<li><p><strong>IJK</strong>: ejes del sistema de coordenadas de vóxeles. Los valores de coordenadas enteros corresponden a las posiciones de los centros de los vóxeles. Los valores IJK suelen usarse como valores de coordenadas para designar un elemento dentro de un arreglo 3D. Por convención de VTK, I indexa la columna, J indexa la fila y K indexa el corte. Tenga en cuenta que numpy usa la convención de ordenamiento opuesta, donde <code>a[K][J][I]</code>. A veces esta disposición de memoria se describe como que I es el índice de variación más rápida y K el de variación más lenta.</p></li>
+<li><p><strong>ITK</strong>: <a href="https://itk.org/">Insight Toolkit</a>. Biblioteca de software que Slicer usa para la mayoría de las operaciones de procesamiento de imágenes.</p></li>
+<li><p><strong>Labelmap (mapa de etiquetas)</strong> (o volumen de mapa de etiquetas, nodo de volumen de mapa de etiquetas): nodo de volumen que tiene valores de vóxel discretos (enteros). Normalmente, cada valor corresponde a una estructura o región específica. Esto permite una representación compacta de regiones no superpuestas en un único arreglo 3D. La mayoría del software usa un único mapa de etiquetas para almacenar una segmentación de imagen, pero Slicer usa un nodo de segmentación dedicado, que puede contener múltiples representaciones (varios mapas de etiquetas para permitir almacenar segmentos superpuestos; representación de superficie cerrada para una visualización 3D rápida, etc.).</p></li>
+<li><p><strong>LPS</strong>: sistema de coordenadas anatómicas izquierda-posterior-superior (left-posterior-superior). Es el sistema de coordenadas más usado en la computación de imágenes médicas. Slicer almacena todos los datos en disco en el sistema de coordenadas LPS (y los convierte a/desde RAS al escribir o leer del disco).</p></li>
+<li><p><strong>Markups (marcas)</strong>: objetos geométricos simples y mediciones que el usuario puede colocar en los visores. El <a href="https://slicer.readthedocs.io/en/latest/user_guide/modules/markups.html">módulo Markups</a> puede usarse para crear dichos objetos. Hay varios tipos, como lista de puntos, línea, curva, plano y ROI.</p></li>
+<li><p><strong>Volumen de origen (source volume)</strong>: los valores de vóxel de este volumen se usan durante la segmentación por aquellos efectos que dependen de la intensidad de un volumen subyacente.</p></li>
+<li><p><strong>MRML</strong>: <a href="https://en.wikipedia.org/wiki/Medical_Reality_Markup_Language">Medical Reality Markup Language</a>: biblioteca de software para el almacenamiento, la visualización y el procesamiento de objetos de información que pueden usarse en aplicaciones médicas. La biblioteca está diseñada para ser reutilizable en diversas aplicaciones de software, pero 3D Slicer es la única aplicación importante que se sabe que la usa.</p></li>
+<li><p><strong>Model (modelo)</strong> (o nodo de modelo): nodo MRML que almacena una malla de superficie (compuesta por celdas 2D como triángulos, polígonos, etc.) o una malla volumétrica (compuesta por celdas 3D como tetraedros, cuñas, etc.).</p></li>
+<li><p><strong>Module (módulo)</strong> (o módulo de Slicer): un módulo de Slicer es un componente de software que consta de una interfaz gráfica de usuario (que se muestra en el panel del módulo cuando este se selecciona), una lógica (que implementa algoritmos que operan sobre nodos MRML) y que puede proporcionar nuevos tipos de nodos MRML, gestores visualizables (responsables de mostrar dichos nodos en las vistas), complementos de entrada/salida (responsables de cargar/guardar nodos MRML en archivos) y otros complementos diversos. Los módulos suelen ser independientes y se comunican entre sí únicamente modificando nodos MRML, pero a veces un módulo usa funciones proporcionadas por otros módulos llamando a métodos de su lógica.</p></li>
+<li><p><strong>Node (nodo)</strong> (o nodo MRML): un objeto de datos en la escena. Un nodo puede representar datos (como una imagen o una malla), describir cómo se muestran (color, opacidad, etc.), almacenarse en disco, las transformaciones espaciales aplicadas sobre ellos, etc. Existe una jerarquía de clases en C++ que define los comportamientos comunes de los nodos, como la propiedad de poder almacenarse en disco o de poder transformarse geométricamente. La estructura de esta jerarquía de clases puede inspeccionarse en el código o en la <a href="https://apidocs.slicer.org/main/classvtkMRMLStorableNode.html">documentación de la API</a>.</p></li>
+<li><p><strong>Marcador de orientación</strong>: marcador en forma de flecha, caja o figura humana para mostrar las direcciones de los ejes en los cortes y las vistas 3D.</p></li>
+<li><p><strong>RAS</strong>: sistema de coordenadas anatómicas derecha-anterior-superior (right-anterior-superior). Sistema de coordenadas usado internamente en Slicer. Puede convertirse a/desde el sistema de coordenadas LPS invirtiendo la dirección de los dos primeros ejes.</p></li>
+<li><p><strong>Reference (referencia)</strong>: no tiene un significado específico, pero normalmente se refiere a una entrada secundaria (objeto de datos, marco de coordenadas, geometría, etc.) para una operación.</p></li>
+<li><p><strong>Región de interés (ROI)</strong>: especifica una región con forma de caja en 3D. Puede usarse para recortar volúmenes, recortar modelos, etc.</p></li>
+<li><p><strong>Registration (registro)</strong>: el proceso de alinear objetos en el espacio. El resultado del registro es una transformación, que transforma el objeto “móvil” para que coincida con el objeto “fijo”.</p></li>
+<li><p><strong>Resolución</strong>: tamaño de vóxel de un volumen, normalmente especificado en mm/píxel. Rara vez se usa en la interfaz de usuario porque su significado es algo engañoso: un valor de resolución alto significa un espaciado grande, lo que significa una resolución de imagen baja (gruesa).</p></li>
+<li><p><strong>Ruler (regla)</strong>: puede referirse a: 1. Regla de la vista: la línea que se muestra superpuesta en los visores para servir como referencia de tamaño. 2. Línea de markups: herramienta de medición de distancia.</p></li>
+<li><p><strong>Componente escalar</strong>: un elemento de un vector. El número de componentes escalares es la longitud del vector.</p></li>
+<li><p><strong>Valor escalar</strong>: un número simple. Normalmente de punto flotante.</p></li>
+<li><p><strong>Scene (escena)</strong> (o escena MRML): es la estructura de datos que contiene todos los datos actualmente cargados en la aplicación e información adicional sobre cómo deben mostrarse o usarse. El término proviene de los <a href="https://en.wikipedia.org/wiki/Rendering_(computer_graphics)">gráficos por computadora</a>.</p></li>
+<li><p><strong>Segment (segmento)</strong>: corresponde a una sola estructura en una segmentación. Vea más información en la sección <a href="https://slicer.readthedocs.io/en/latest/user_guide/image_segmentation.html">Segmentación de imágenes</a>.</p></li>
+<li><p><strong>Segmentation (segmentación)</strong> (también conocida como contorneado, anotación; región de interés, conjunto de estructuras, máscara): proceso de delinear estructuras 3D en imágenes. La segmentación también puede referirse al nodo MRML que es el resultado del proceso de segmentación. Un nodo de segmentación normalmente contiene múltiples segmentos (cada segmento corresponde a una estructura 3D). Los nodos de segmentación no son nodos de mapa de etiquetas ni nodos de modelo, pero pueden almacenar múltiples representaciones (mapa de etiquetas binario, superficie cerrada, etc.). Vea más información en la sección <a href="https://slicer.readthedocs.io/en/latest/user_guide/image_segmentation.html">Segmentación de imágenes</a>.</p></li>
+<li><p><strong>Slice (corte)</strong>: intersección de un objeto 3D con un plano.</p></li>
+<li><p><strong>Anotaciones de la vista de corte</strong>: texto en la esquina de los cortes que muestra el nombre y las etiquetas DICOM seleccionadas de los volúmenes mostrados.</p></li>
+<li><p><strong>Spacing (espaciado)</strong>: tamaño de vóxel de un volumen, normalmente especificado en mm/píxel.</p></li>
+<li><p><strong>Transform (transformación)</strong>: puede transformar cualquier objeto 3D de un sistema de coordenadas a otro. El tipo más común es la transformación rígida, que puede cambiar la posición y la orientación de un objeto. Las transformaciones lineales pueden escalar, reflejar y cizallar objetos. Las transformaciones no lineales pueden deformar arbitrariamente el espacio 3D. Para mostrar un volumen en el sistema de coordenadas del mundo, el volumen debe remuestrearse, por lo que se necesita una transformación <em>desde</em> el sistema de coordenadas del mundo hacia el volumen (se denomina transformación de remuestreo). Para transformar todos los demás tipos de nodos al sistema de coordenadas del mundo, todos los puntos deben transformarse <em>hacia</em> el sistema de coordenadas del mundo (transformación de modelado). Dado que un nodo de transformación debe poder aplicarse a cualquier nodo, los nodos de transformación pueden proporcionar tanto la transformación <em>desde</em> como <em>hacia</em> el nodo padre (almacenan una y calculan la otra sobre la marcha).</p></li>
+<li><p><strong>Volume (volumen)</strong> (o nodo de volumen, volumen escalar, imagen): nodo MRML que almacena un arreglo 3D de vóxeles. Los índices del arreglo suelen denominarse IJK. El rango de coordenadas IJK se denomina extents. La geometría del volumen se especifica mediante su origen (posición del punto IJK=(0,0,0)), su espaciado (tamaño de un vóxel a lo largo de los ejes I, J, K), las direcciones de los ejes (dirección de los ejes I, J, K en el sistema de coordenadas de referencia) con respecto a un marco de referencia. Las imágenes 2D son volúmenes 3D de un solo corte, con su posición y orientación especificadas en el espacio 3D.</p></li>
+<li><p><a href="https://en.wikipedia.org/wiki/Voxel"><strong>Voxel (vóxel)</strong></a>: un elemento de un volumen 3D. Tiene forma de prisma rectangular. Las coordenadas de un vóxel corresponden a la posición de su punto central. El valor de un vóxel puede ser un valor escalar simple o un vector.</p></li>
+<li><p><strong>VR</strong>: abreviatura que puede referirse a volume rendering (renderización de volumen) o a virtual reality (realidad virtual). Para evitar ambigüedad, generalmente se recomienda usar el término completo (o definir explícitamente el significado de la abreviatura en el contexto dado).</p></li>
+<li><p><strong>VTK</strong>: <a href="https://vtk.org/">Visualization Toolkit</a>. Biblioteca de software que Slicer usa para la representación y la visualización de datos. Dado que la mayoría de las clases de Slicer derivan de clases de VTK y usan intensamente otras clases de VTK, Slicer adoptó muchas convenciones del estilo y la interfaz de programación de aplicaciones de VTK.</p></li>
+<li><p><strong>Window/level (ventana/nivel)</strong> (o ancho de ventana/nivel de ventana): especifica el mapeo lineal de los valores de vóxel al brillo de un píxel mostrado. La ventana (window) es el tamaño del rango de intensidad que se mapea a todo el rango de intensidad visualizable. El nivel (level) es el valor de vóxel que se mapea al centro de todo el rango de intensidad visualizable.</p></li>
+</ul>
+</body>
+</html>
