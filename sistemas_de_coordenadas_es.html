@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Sistemas de coordenadas — 3D Slicer</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <script src="/usr/share/javascript/mathjax/tex-mml-chtml.js" type="text/javascript"></script>
+  <style>body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #222; max-width: 900px; margin: 0 auto; padding: 2rem; }
+  h1, h2, h3, h4 { color: #14315a; line-height: 1.25; }
+  h1 { border-bottom: 3px solid #2e6da4; padding-bottom: .3rem; }
+  h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .2rem; margin-top: 2rem; }
+  a { color: #2e6da4; }
+  table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+  th, td { border: 1px solid #d0d7de; padding: .4rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #f0f4f8; }
+  tr:nth-child(even) { background: #f9fafb; }
+  img { max-width: 100%; }
+  pre { background: #f6f8fa; padding: .8rem 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; }
+  code { background: #f0f4f8; padding: .1rem .3rem; border-radius: 4px; font-size: .9em; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 4px solid #2e6da4; margin-left: 0; padding-left: 1rem; color: #555; }</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Sistemas de coordenadas — 3D Slicer</h1>
+</header>
+<h1 id="sistemas-de-coordenadas">Sistemas de coordenadas</h1>
+<h2 id="introducción">Introducción</h2>
+<p>Uno de los problemas al trabajar con imágenes médicas y aplicaciones son las diferencias entre los sistemas de coordenadas. Hay tres sistemas de coordenadas que se usan comúnmente en las aplicaciones de imagen: se puede distinguir entre el sistema de coordenadas del <strong>mundo</strong>, el <strong>anatómico</strong> y el <strong>de la imagen</strong>.</p>
+<p>La siguiente figura ilustra los tres espacios y sus ejes correspondientes:</p>
+<p><a href="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems.png"><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems.png" alt="coordinate_systems" /></a></p>
+<p>Cada sistema de coordenadas cumple un propósito y representa sus datos de una manera particular.</p>
+<p>Imagen anatómica basada en una <a href="https://my-ms.org/mri_planes.htm">imagen compartida por la organización My MS</a>.</p>
+<p>Tenga en cuenta que Chand John, de Stanford, creó una <a href="https://www.na-mic.org/w/img_auth.php/3/3f/Coordinate_Systems_Demystified.ppt">presentación detallada sobre la forma en que se manejan las coordenadas en Slicer</a>.</p>
+<h3 id="sistema-de-coordenadas-del-mundo">Sistema de coordenadas del mundo</h3>
+<p>El sistema de coordenadas del mundo es normalmente un sistema de coordenadas cartesiano en el que se posiciona un modelo (por ejemplo, un escáner de RM o un paciente). Cada modelo tiene su propio sistema de coordenadas, pero solo hay un sistema de coordenadas del mundo para definir la posición y la orientación de cada modelo.</p>
+<h3 id="sistema-de-coordenadas-anatómico">Sistema de coordenadas anatómico</h3>
+<p>El sistema de coordenadas de modelo más importante para las técnicas de imagen médica es el espacio anatómico (también llamado sistema de coordenadas del paciente). Este espacio consta de tres planos para describir la posición anatómica estándar de un ser humano:</p>
+<ul>
+<li><p>el <em>plano axial</em> es paralelo al suelo y separa la cabeza (Superior) de los pies (Inferior).</p></li>
+<li><p>el <em>plano coronal</em> es perpendicular al suelo y separa el frente (Anterior) de la parte posterior (Posterior).</p></li>
+<li><p>el <em>plano sagital</em> es perpendicular al suelo y separa la izquierda (Left) de la derecha (Right).</p></li>
+</ul>
+<p>De estos planos se deduce que todos los ejes tienen su notación en una dirección positiva (por ejemplo, el eje Superior negativo está representado por el eje Inferior).</p>
+<p>El sistema de coordenadas anatómico es un espacio tridimensional continuo en el que se ha muestreado una imagen. En neuroimagen, es común definir este espacio con respecto al ser humano cuyo cerebro se está escaneando. Por lo tanto, la base 3D se define a lo largo de los ejes anatómicos anterior-posterior, inferior-superior e izquierda-derecha.</p>
+<p>Sin embargo, distintas aplicaciones médicas usan distintas definiciones de esta base 3D. Las más comunes son las siguientes bases:</p>
+<ul>
+<li>LPS (Left, Posterior, Superior; izquierda, posterior, superior) se usa en las imágenes DICOM</li>
+</ul>
+[
+<span class="math display">\[\begin{split}
+LPS = \begin{Bmatrix}
+\text{de la derecha hacia la izquierda} \\
+\text{de anterior hacia posterior} \\
+\text{de inferior hacia superior}
+\end{Bmatrix}
+\end{split}\]</span>
+<p>]</p>
+<ul>
+<li>RAS (Right, Anterior, Superior; derecha, anterior, superior) es similar a LPS con los dos primeros ejes invertidos</li>
+</ul>
+[
+<span class="math display">\[\begin{split}
+RAS = \begin{Bmatrix}
+\text{de la izquierda hacia la derecha} \\
+\text{de posterior hacia anterior} \\
+\text{de inferior hacia superior}
+\end{Bmatrix}
+\end{split}\]</span>
+<p>]</p>
+<p>Por lo tanto, la única diferencia entre las dos convenciones es que el signo de las dos primeras coordenadas está invertido.</p>
+<p>Ambas bases son igual de útiles y lógicas. Solo es necesario saber a qué base está referenciada una imagen.</p>
+<h3 id="sistema-de-coordenadas-de-la-imagen">Sistema de coordenadas de la imagen</h3>
+<p>El sistema de coordenadas de la imagen describe cómo se adquirió una imagen con respecto a la anatomía. Los escáneres médicos crean matrices regulares y rectangulares de puntos y celdas que comienzan en la esquina superior izquierda. El eje (i) aumenta hacia la derecha, el eje (j) hacia abajo y el eje (k) hacia atrás.</p>
+<p>Además del valor de intensidad de cada vóxel ((i j k)), también se almacenan el origen y el espaciado de las coordenadas anatómicas.</p>
+<ul>
+<li><p>El origen representa la posición del primer vóxel (0, 0, 0) en el sistema de coordenadas anatómico, por ejemplo (100, 50, -25) mm.</p></li>
+<li><p>El espaciado especifica la distancia entre vóxeles a lo largo de cada eje, por ejemplo (1.5, 0.5, 0.5) mm.</p></li>
+</ul>
+<p>El siguiente ejemplo 2D muestra el significado del origen y el espaciado:</p>
+<p><a href="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems_image_coordinates.png"><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems_image_coordinates.png" alt="image_coordinates" /></a></p>
+<p>Usando el origen y el espaciado, puede calcularse la posición correspondiente de cada vóxel (en coordenadas de imagen) en coordenadas anatómicas.</p>
+<h2 id="transformación-de-la-imagen">Transformación de la imagen</h2>
+<p>La transformación de un vector del espacio de imagen ((i j k)’) a un vector del espacio anatómico () es una transformación afín, que consiste en una transformación lineal () seguida de una traslación ().</p>
+[  = A
+<span class="math display">\[\begin{pmatrix} i &amp; j &amp; k \end{pmatrix}\]</span>
+<p>’ +  ]</p>
+<p>La matriz de transformación () es una matriz de (3 ) y contiene toda la información sobre las direcciones del espacio y el escalado de los ejes.</p>
+<p>() es un vector de (3 ) y contiene información sobre la posición geométrica del primer vóxel.</p>
+[
+<span class="math display">\[\begin{split}
+\begin{pmatrix} x_1 \\ x_2 \\ x_3 \end{pmatrix} =
+\begin{pmatrix} A_{11} &amp; A_{12} &amp; A_{13} \\ A_{21} &amp; A_{22} &amp; A_{23} \\ A_{31} &amp; A_{32} &amp; A_{33} \end{pmatrix}
+\begin{pmatrix} i \\ j \\ k \end{pmatrix} + \begin{pmatrix} t_1 \\ t_2 \\ t_3 \end{pmatrix}
+\end{split}\]</span>
+<p>]</p>
+<p>La última ecuación muestra que la transformación lineal se realiza mediante una multiplicación de matrices y la traslación mediante una suma de vectores. Para representar ambas, la transformación y la traslación, mediante una multiplicación de matrices, debe usarse una matriz aumentada. Esta técnica requiere que la matriz () se aumente con una fila adicional de ceros en la parte inferior, una columna adicional —el vector de traslación— a la derecha, y un (1) en la esquina inferior derecha. Además, todos los vectores deben escribirse como coordenadas homogéneas, lo que significa que se les agrega un (1) al final.</p>
+[
+<span class="math display">\[\begin{split}
+\begin{pmatrix} x_1 \\ x_2 \\ x_3 \\ 1 \end{pmatrix} =
+\begin{pmatrix} A_{11} &amp; A_{12} &amp; A_{13} &amp; t_1 \\ A_{21} &amp; A_{22} &amp; A_{23} &amp; t_2 \\
+ A_{31} &amp; A_{32} &amp; A_{33} &amp; t_3 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{pmatrix}
+\begin{pmatrix} i \\ j \\ k \\ 1 \end{pmatrix}
+\end{split}\]</span>
+<p>]</p>
+<p>Dependiendo del espacio anatómico usado (LPS o RAS), la matriz de (4 ) se llama matriz <strong>IJKtoLPS</strong> o <strong>IJKtoRAS</strong>, porque representa la transformación de IJK a LPS o RAS.</p>
+<h2 id="ejemplo-2d-o-cálculo-de-una-matriz-ijtols">Ejemplo 2D o cálculo de una matriz <em>IJtoLS</em></h2>
+<p>La siguiente figura muestra el espacio anatómico con una base L(P)S a la izquierda y las coordenadas de imagen correspondientes a la derecha.</p>
+<p><a href="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems_IJtoLS.png"><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems_IJtoLS.png" alt="IJtoLS" /></a></p>
+<p>El origen (las coordenadas del primer píxel en el espacio anatómico) es (50, 300) mm y el espaciado (la distancia entre dos píxeles) es (50, 50) mm.</p>
+<p>Como este es un ejemplo 2D, () es una matriz de (2 ) y () un vector de (2 ). Por lo tanto, la ecuación de la transformación afín es:</p>
+[
+<span class="math display">\[\begin{split}
+\begin{pmatrix} L \\ S \\ 1 \end{pmatrix} =
+\begin{pmatrix} A_{11} &amp; A_{12} &amp; t_1 \\ A_{21} &amp; A_{22} &amp; t_2 \\ 0 &amp; 0 &amp; 1 \end{pmatrix}
+\begin{pmatrix} i \\ j \\ 1 \end{pmatrix}
+\end{split}\]</span>
+<p>]</p>
+<p>Al multiplicar la matriz <strong>IJtoLS</strong> y el vector del lado derecho, se obtendrá el siguiente producto:</p>
+<figure>
+<img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems_matrix_multiplication.png" alt="" /><figcaption>matrix_multiplication</figcaption>
+</figure>
+<p>La última ecuación y el producto de matrices muestran que deben determinarse un total de 6 variables desconocidas ((A_{11}, A_{12}, A_{21}, A_{22}, t_1, t_2)). El conocimiento del origen y el espaciado, sin embargo, permite las siguientes relaciones entre el espacio de imagen y el espacio anatómico:</p>
+[
+<span class="math display">\[\begin{split}
+\begin{pmatrix} L \\ S \end{pmatrix} \equiv \begin{pmatrix} i \\ j \end{pmatrix} \qquad
+\begin{pmatrix} 50 \\ 300 \end{pmatrix} \equiv \begin{pmatrix} 0 \\ 0 \end{pmatrix} \qquad
+\begin{pmatrix} 100 \\ 300 \end{pmatrix} \equiv \begin{pmatrix} 1 \\ 0 \end{pmatrix} \qquad
+\begin{pmatrix} 50 \\ 250 \end{pmatrix} \equiv \begin{pmatrix} 0 \\ 1 \end{pmatrix} \qquad \dots
+\end{split}\]</span>
+<p>]</p>
+<p>Así, pueden derivarse al menos seis ecuaciones:</p>
+[
+<span class="math display">\[\begin{split}
+\begin{align*}
+50 &amp;= A_{11} \cdot 0 + A_{12} \cdot 0 + t_1 \cdot 1 \\
+300 &amp;= A_{21} \cdot 0 + A_{22} \cdot 0 + t_2 \cdot 1 \\
+100 &amp;= A_{11} \cdot 1 + A_{12} \cdot 0 + t_1 \cdot 1 \\
+300 &amp;= A_{21} \cdot 1 + A_{22} \cdot 0 + t_2 \cdot 1 \\
+50 &amp;= A_{11} \cdot 0 + A_{12} \cdot 1 + t_1 \cdot 1 \\
+250 &amp;= A_{21} \cdot 0 + A_{22} \cdot 1 + t_2 \cdot 1
+\end{align*}
+\end{split}\]</span>
+<p>]</p>
+<p>Como se mencionó anteriormente, la traslación () contiene la información sobre la posición geométrica del primer píxel y, por lo tanto, es equivalente al origen. Este resultado también se confirma con las primeras ecuaciones.</p>
+<p>La solución de las demás ecuaciones conduce a la siguiente matriz <strong>IJtoLS</strong>:</p>
+[
+<span class="math display">\[\begin{split}
+IJtoLS = \begin{pmatrix} 50 &amp; 0 &amp; 50 \\ 0 &amp; -50 &amp; 300 \\ 0 &amp; 0 &amp; 1 \end{pmatrix}
+\end{split}\]</span>
+<p>]</p>
+<p>En el caso de que se usara una base R(A)S, simplemente se invierten los ejes izquierdo y anterior del espacio anatómico, y el sistema de coordenadas de la imagen aparece de la misma manera que en el caso L(P)S.</p>
+<p><a href="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems_IJtoRS.png"><img src="https://github.com/Slicer/Slicer/releases/download/docs-resources/coordinate_systems_IJtoRS.png" alt="IJtoRS" /></a></p>
+<p>Para este ejemplo 2D, la matriz <strong>IJtoRS</strong> sería:</p>
+[
+<span class="math display">\[\begin{split}
+IJtoRS = \begin{pmatrix} -50 &amp; 0 &amp; 250 \\ 0 &amp; -50 &amp; 300 \\ 0 &amp; 0 &amp; 1 \end{pmatrix}
+\end{split}\]</span>
+<p>]</p>
+<p>Esta matriz se parece mucho a la matriz <strong>IJtoLS</strong>, con 2 diferencias:</p>
+<ul>
+<li><p>La traslación () ha cambiado debido a un origen diferente.</p></li>
+<li><p>El eje derecho está invertido, por lo que la primera columna de la matriz <strong>IJtoRS</strong> simplemente tiene el signo invertido.</p></li>
+</ul>
+<h2 id="convención-de-sistema-de-coordenadas-en-slicer">Convención de sistema de coordenadas en Slicer</h2>
+<p>DICOM y la mayoría del software de imagen médica usan el <strong>sistema de coordenadas LPS</strong> para almacenar todos los datos. La elección del origen es arbitraria porque solo tienen significado las diferencias relativas, por lo que no existe un estándar universal, pero a menudo se establece en algún centro geométrico del sistema de imagen, o se elige cerca del centro de un objeto de interés.</p>
+<p>Tanto LPS como RAS eran de uso amplio a principios de la década de 2000, cuando comenzó el desarrollo de Slicer, y los desarrolladores de Slicer optaron por usar el sistema de coordenadas RAS. Históricamente, los escaneos realizados con equipos de GE usaban RAS, mientras que Siemens y otros usaban LPS. Dado que varios investigadores de GE fueron de los primeros colaboradores de Slicer, se adoptó RAS para la representación interna.</p>
+<p>Slicer todavía <strong>usa el sistema de coordenadas RAS para almacenar internamente los valores de coordenadas</strong> de todos los tipos de datos, pero, por compatibilidad con otro software, <strong>asume que todos los datos de los archivos están almacenados en el sistema de coordenadas LPS</strong> (a menos que en el archivo se indique explícitamente que el sistema de coordenadas es RAS). Para lograrlo, siempre que Slicer lee o escribe un archivo, puede necesitar invertir el signo de los dos primeros ejes de coordenadas para convertir los datos al sistema de coordenadas RAS.</p>
+<h3 id="relaciones-con-otro-softwareconvenciones">Relaciones con otro software/convenciones</h3>
+<h4 id="itk">ITK</h4>
+<p><a href="https://itk.org/">ITK</a> usa la convención LPS.</p>
+<h4 id="usar-matlab-para-mapear-coordenadas-ras-de-slicer-por-ejemplo-marcadores-fiduciales-al-espacio-de-vóxeles-de-una-imagen-nifti">Usar MATLAB para mapear coordenadas RAS de Slicer (por ejemplo, marcadores fiduciales) al espacio de vóxeles de una imagen NIfTI</h4>
+<p>Para extraer la matriz de transformación “voxel a mundo” del encabezado de un archivo NIfTI (entrada: <code>qto_xyz:1-4</code>) en MATLAB:</p>
+<pre><code>d = inv(M) * [ R A S 1 ]&#39;
+</code></pre>
+<p>donde <code>M</code> es la matriz y <code>R A S</code> son coordenadas en Slicer, entonces <code>d</code> da un vector de coordenadas de vóxel.</p>
+<p>(Solución cortesía de András Jakab, Universidad de Debrecen)</p>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li><p><a href="https://people.cs.uchicago.edu/~glk/unlinked/nrrd-iomf.pdf" class="uri">https://people.cs.uchicago.edu/~glk/unlinked/nrrd-iomf.pdf</a></p></li>
+<li><p><a href="http://www.grahamwideman.com/gw/brain/orientation/orientterms.htm" class="uri">http://www.grahamwideman.com/gw/brain/orientation/orientterms.htm</a></p></li>
+<li><p><a href="https://nifti.nimh.nih.gov/nifti-1/documentation/faq" class="uri">https://nifti.nimh.nih.gov/nifti-1/documentation/faq</a></p></li>
+<li><p><a href="https://teem.sourceforge.net/nrrd/format.html" class="uri">https://teem.sourceforge.net/nrrd/format.html</a></p></li>
+<li><p><a href="https://dicom.nema.org/dicom/2013/output/chtml/part03/sect_C.7.html#sect_C.7.6.2.1.1">DICOM 2013 PS3.3 Image Position and Image Orientation</a></p></li>
+</ul>
+</body>
+</html>
