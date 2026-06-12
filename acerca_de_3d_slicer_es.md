@@ -349,7 +349,7 @@ Para conocer el historial de actualizaciones y revisiones de este documento, con
 
 ### Dictadores benevolentes vitalicios
 
-Los [dictadores benevolentes](https://slicer.readthedocs.io/en/latest/user_guide/about.html#benevolent-dictators-for-life) pueden integrar cambios para mantener la salud de la plataforma y ayudar a interpretar o resolver conflictos relacionados con las directrices de contribución.
+Los [dictadores benevolentes](#dictadores-benevolentes-vitalicios) pueden integrar cambios para mantener la salud de la plataforma y ayudar a interpretar o resolver conflictos relacionados con las directrices de contribución.
 
 Actualmente incluyen a:
 
